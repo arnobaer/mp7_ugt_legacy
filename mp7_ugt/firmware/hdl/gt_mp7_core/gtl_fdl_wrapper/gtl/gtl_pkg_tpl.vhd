@@ -37,6 +37,11 @@ use work.gt_mp7_core_pkg.all;
 
 package gtl_pkg is
 
+    type object_slice_1_vs_template_array is array (0 to 11, 1 to 1) of std_logic;
+    type object_slice_2_vs_template_array is array (0 to 11, 1 to 1) of std_logic;
+    type object_slice_3_vs_template_array is array (0 to 11, 1 to 1) of std_logic;
+    type object_slice_4_vs_template_array is array (0 to 11, 1 to 1) of std_logic;
+
 {{ugt_constants}}
 
 -- HB 2014-09-09: GTL and FDL firmware major, minor and revision versions moved to gt_mp7_core_pkg.vhd (GTL_FW_MAJOR_VERSION, etc.)
