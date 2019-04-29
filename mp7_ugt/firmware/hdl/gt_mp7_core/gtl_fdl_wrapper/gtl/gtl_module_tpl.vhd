@@ -29,7 +29,12 @@ use ieee.std_logic_unsigned.all;
 use work.gtl_pkg.all;
 
 entity gtl_module is
+    generic(
+        NR_LANES : positive
+    );
     port(
+        clk240 : in std_logic;
+        lane_data : in ldata(NR_LANES-1 downto 0);
         lhc_clk : in std_logic;
         eg_data : in calo_objects_array(0 to NR_EG_OBJECTS-1);
         jet_data : in calo_objects_array(0 to NR_JET_OBJECTS-1);

@@ -190,7 +190,12 @@ begin
     );
 
     gtl_fdl_wrapper_i: entity work.gtl_fdl_wrapper
+    generic map(
+        NR_LANES            => (4 * N_REGION)
+    )
     port map(
+        clk240             => clk240,
+        lane_data          => lane_data_in,
         ipb_clk            => ipb_clk,
         ipb_rst            => ipb_rst,
         ipb_in             => ipb_to_slaves(C_IPB_GT_MP7_GTLFDL),

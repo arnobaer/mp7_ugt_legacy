@@ -30,10 +30,13 @@ use work.lhc_data_pkg.all;
 
 entity gtl_fdl_wrapper is
     generic(
-        SIM_MODE : boolean := false -- if SIM_MODE = true, "algo_bx_mask" by default = 1.
-    );
+        SIM_MODE : boolean := false; -- if SIM_MODE = true, "algo_bx_mask" by default = 1.
+        NR_LANES : positive
+     );
     port
     (
+        clk240 : in std_logic;
+        lane_data           : in ldata(NR_LANES-1 downto 0);
         ipb_clk             : in std_logic;
         ipb_rst             : in std_logic;
         ipb_in              : in ipb_wbus;
@@ -160,7 +163,12 @@ begin
     ext_cond_internal <= lhc_data.external_conditions(NR_EXTERNAL_CONDITIONS-1 downto 0);
 
 gtl_module_i: entity work.gtl_module
-    port map( 
+    generic map(
+        NR_LANES        => NR_LANES
+    )
+    port map(
+        clk240          => clk240,
+        lane_data       => lane_data,
         lhc_clk         => lhc_clk,
         eg_data         => eg_internal,
         jet_data        => jet_internal,
