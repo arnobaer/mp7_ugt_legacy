@@ -23,6 +23,8 @@ use ieee.std_logic_arith.all;
 
 use work.ipbus.all;
 
+use work.mp7_data_types.all;
+
 use work.gtl_pkg.all;
 
 use work.gt_mp7_core_pkg.all;
