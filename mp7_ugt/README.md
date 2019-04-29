@@ -15,6 +15,8 @@
 Following modifications are done in the branch:
   - added [ugt_strategy.tcl](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/firmware/ucf/ugt_strategy.tcl) for ugt specific strategy and inserted it
 into [top.dep](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/firmware/cfg/top.dep).
+  - added [l1menu_files.tcl](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/firmware/cfg/l1menu_files.tcl) for adding L1Menu VHDL files and inserted it
+into [top.dep](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/firmware/cfg/top.dep).
   - modified [uGT_algo.dep](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/firmware/cfg/uGT_algo.dep): removed "doubled" commands (these commnads are in MP7 dep files).
   - added script [runIpbbSynth.py](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/scripts/runIpbbSynth.py) for IPBB synthesis (all 6 mp7_ugt modules).
   - added script [checkIpbbSynth.py](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/scripts/checkIpbbSynth.py) for checking IPBB synthesis results.
@@ -30,8 +32,11 @@ into [top.dep](https://gitlab.cern.ch/hbergaue/ugt/blob/master/mp7_ugt/firmware/
     cd <local path>
     
     # Run synthesis script (for all 6 modules)
-    python mp7_ugt/scripts/runIpbbSynth.py <vivado version [2018.2]> -t <MP7 tag [mp7fw_v2_4_3]> -p <work dir> -m <menu path> -b <build version> --ugt <ugt master, branch or tag name>
+    python mp7_ugt/scripts/runIpbbSynth.py <vivado version [2018.2]> --mp7url <URL MP7 git repo> --mp7tag <MP7 tag in repo> -t <MP7 fw version> -p <work dir> --menutag <L1menu tag in github repo> --menudir <L1menu dir in repo> --menuname <L1menu name> -b <build version> --ugturl <URL ugt git repo> -u <ugt tag in repo> --ipbb <IPBB version>
 
+    # Example
+    python mp7_ugt/scripts/runIpbbSynth.py 2018.2 --mp7url https://:@gitlab.cern.ch:8443/hbergaue/mp7.git --mp7tag mp7fw_v2_4_1_mp7_ugt -t mp7fw_v2_4_1 -p ~/work_ipbb_test_new --menutag master --menudir herbberg/l1menus --menuname L1Menu_Collisions2018_v2_1_0-d1 -b 0xfffa --ugturl https://:@gitlab.cern.ch:8443/hbergaue/ugt.git -u dev_ipbb --ipbb 0.2.8
+    
 ### Setup (commands for one module) ###
 
     # Run kerberos for outside of CERN network
