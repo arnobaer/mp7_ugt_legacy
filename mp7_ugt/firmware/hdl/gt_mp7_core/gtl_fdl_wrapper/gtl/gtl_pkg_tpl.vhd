@@ -1,6 +1,8 @@
 -- Description:
 -- Package for constant and type definitions of GTL firmware in Global Trigger Upgrade system.
 
+-- HB 2019-06-03: inserted PRESCALER_FRACTION_WIDTH for fractional prescaler values
+-- HB 2019-05-02: inserted types for calo_cond_matrix.vhd.
 -- HB 2018-08-06: inserted constants and types for "Asymmetry" and "Centrality" (included in esums data structure).
 -- HB 2017-10-02: inserted constant MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR and MAX_WIDTH_DR_LIMIT_VECTOR.
 -- HB 2017-09-29: inserted constant MAX_WIDTH_MASS_LIMIT_VECTOR and MAX_WIDTH_TBPT_LIMIT_VECTOR.
@@ -37,6 +39,14 @@ use work.gt_mp7_core_pkg.all;
 
 package gtl_pkg is
 
+-- HB 2019-05-02: inserted types for calo_cond_matrix.vhd.
+type object_slice_1_vs_template_array is array (natural range <>, natural range <>) of std_logic;     
+type object_slice_2_vs_template_array is array (natural range <>, natural range <>) of std_logic;     
+type object_slice_3_vs_template_array is array (natural range <>, natural range <>) of std_logic;     
+type object_slice_4_vs_template_array is array (natural range <>, natural range <>) of std_logic; 
+    
+type sin_cos_integer_array is array (natural range <>) of integer;
+
 {{ugt_constants}}
 
 -- HB 2014-09-09: GTL and FDL firmware major, minor and revision versions moved to gt_mp7_core_pkg.vhd (GTL_FW_MAJOR_VERSION, etc.)
@@ -56,6 +66,8 @@ constant FDL_FW_VERSION : std_logic_vector(31 downto 0) := X"00" &
 -- ==== FDL definitions - begin ============================================================
 -- Definitions for prescalers (for FDL !)
 constant PRESCALER_COUNTER_WIDTH : integer := 24;
+-- HB 2019-06-03: inserted for fractional prescaler values
+constant PRESCALER_FRACTION_WIDTH : integer := 8;
 
 -- HB HB 2016-03-02: type definition for "global" index use.
 type prescale_factor_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0);
@@ -124,6 +136,7 @@ type muon_templates_quality_array is array (1 to NR_MUON_TEMPLATES) of std_logic
 type muon_templates_iso_array is array (1 to NR_MUON_TEMPLATES) of std_logic_vector((2**(d_s_i_muon.iso_high-d_s_i_muon.iso_low+1))-1 downto 0);
 
 type muon_templates_boolean_array is array (1 to NR_MUON_TEMPLATES) of boolean;
+type muon_templates_natural_array is array (1 to NR_MUON_TEMPLATES) of natural;
 type muon_templates_string_array is array (1 to NR_MUON_TEMPLATES) of string(1 to 3);
 
 -- HB 2014-04-15: types for muon_charge_correlations.vhd
@@ -207,6 +220,7 @@ type calo_objects_array is array (natural range <>) of std_logic_vector(MAX_CALO
 constant MAX_CALO_TEMPLATES_BITS : positive range 1 to MAX_CALO_BITS := 16;
 type calo_templates_array is array (1 to NR_CALO_TEMPLATES) of std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
 type calo_templates_boolean_array is array (1 to NR_CALO_TEMPLATES) of boolean;
+type calo_templates_natural_array is array (1 to NR_CALO_TEMPLATES) of natural;
 constant MAX_CALO_ISO_BITS : positive range 1 to 2 := max((D_S_I_EG_V2.iso_high-D_S_I_EG_V2.iso_low+1), (D_S_I_TAU_V2.iso_high-D_S_I_TAU_V2.iso_low+1));
 type calo_templates_iso_array is array (1 to NR_CALO_TEMPLATES) of std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0);
 
