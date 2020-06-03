@@ -910,6 +910,16 @@ constant MU_MU_ROM : natural range 0 to 2 := 1;
 constant CALO_MU_ROM : natural range 0 to 2 := 2;
 
 -- ********************************************************
+-- definitions for tests (new cuts structure)
+constant MU_MU_MASS_INV_VECTOR_WIDTH : positive := 2*MU_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH;
+type mu_mu_mass_inv_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_MASS_INV_VECTOR_WIDTH-1 downto 0);
+
+type dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
+
+constant MU_MU_TBPT_VECTOR_WIDTH : positive := 2+2*MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
+type mu_mu_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_TBPT_VECTOR_WIDTH-1 downto 0);
+
+-- ********************************************************
 -- conversion LUTs
 type calo_eta_conv_2_muon_eta_lut_array is array (0 to 2**MAX_CALO_ETA_BITS-1) of integer range -510 to 510;
 -- type eg_eta_conv_2_muon_eta_lut_array is array (0 to 2**MAX_CALO_ETA_BITS-1) of integer range -510 to 510;
