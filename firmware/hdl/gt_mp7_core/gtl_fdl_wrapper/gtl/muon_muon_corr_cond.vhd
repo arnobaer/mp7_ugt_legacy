@@ -105,12 +105,12 @@ entity muon_muon_corr_cond is
         muon2_data_i: in muon_objects_array;
         ls_charcorr_double: in muon_charcorr_double_array;
         os_charcorr_double: in muon_charcorr_double_array;
-        deta : in deta_dphi_vector_array := (others => others => others => '0')));
-        dphi : in deta_dphi_vector_array := (others => others => others => '0')));
-        dr : in dr_vector_array := (others => others => others => '0')));
-        mass_inv : in mu_mu_mass_inv_vector_array := (others => others => others => '0')));
-        mass_div_dr : in mu_mu_mass_div_dr_vector_array := (others => others => others => '0')));
-        tbpt : in mu_mu_mass_tbpt_vector_array := (others => others => others => '0')));
+        deta : in deta_dphi_vector_array := (others => (others => (others => '0')));
+        dphi : in deta_dphi_vector_array := (others => (others => (others => '0')));
+        dr : in dr_vector_array := (others => (others => (others => '0')));
+        mass_inv : in mu_mu_mass_inv_vector_array := (others => (others => (others => '0')));
+        mass_div_dr : in mu_mu_mass_div_dr_vector_array := (others => (others => (others => '0')));
+        tbpt : in mu_mu_mass_tbpt_vector_array := (others => (others => (others => '0')));
         condition_o: out std_logic
     );
 end muon_muon_corr_cond; 
