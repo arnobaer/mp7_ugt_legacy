@@ -268,14 +268,9 @@ begin
     -- Pipeline stage for obj_vs_templ
     obj_vs_templ_pipeline_p: process(lhc_clk, calo1_obj_vs_templ, calo2_obj_vs_templ)
         begin
-        if obj_vs_templ_pipeline_stage = false then 
+        if (lhc_clk'event and lhc_clk = '1') then
             calo1_obj_vs_templ_pipe <= calo1_obj_vs_templ;
             calo2_obj_vs_templ_pipe <= calo2_obj_vs_templ;
-        else
-            if (lhc_clk'event and lhc_clk = '1') then
-                calo1_obj_vs_templ_pipe <= calo1_obj_vs_templ;
-                calo2_obj_vs_templ_pipe <= calo2_obj_vs_templ;
-            end if;
         end if;
     end process;
 
@@ -307,7 +302,7 @@ begin
             condition_and_or_tmp := condition_and_or_tmp or obj_vs_templ_vec(i);
         end loop;
         condition_and_or <= condition_and_or_tmp;
-    end process matrix_deta_dphi_dr_p;
+    end process matrix_p;
 
     -- Pipeline stage for condition output.
     condition_o_pipeline_p: process(lhc_clk, condition_and_or)
