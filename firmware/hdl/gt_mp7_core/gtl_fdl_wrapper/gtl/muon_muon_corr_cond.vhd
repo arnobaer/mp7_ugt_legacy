@@ -94,9 +94,9 @@ entity muon_muon_corr_cond is
 
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0);
         
-        mass_width: positive;
-        mass_div_dr_width: positive;
-        tbpt_width: positive
+        mass_width: positive := 56;
+        mass_div_dr_width: positive := 83;
+        tbpt_width: positive := 50
 
    );
     port(
@@ -108,7 +108,8 @@ entity muon_muon_corr_cond is
         deta : in deta_dphi_vector_array := (others => (others => (others => '0')));
         dphi : in deta_dphi_vector_array := (others => (others => (others => '0')));
         dr : in dr_vector_array := (others => (others => (others => '0')));
-        mass_inv : in mu_mu_mass_inv_vector_array := (others => (others => (others => '0')));
+        mass_inv : in mu_mu_mass_vector_array := (others => (others => (others => '0')));
+        mass_trv : in mu_mu_mass_vector_array := (others => (others => (others => '0')));
         mass_div_dr : in mu_mu_mass_div_dr_vector_array := (others => (others => (others => '0')));
         tbpt : in mu_mu_mass_tbpt_vector_array := (others => (others => (others => '0')));
         condition_o: out std_logic
