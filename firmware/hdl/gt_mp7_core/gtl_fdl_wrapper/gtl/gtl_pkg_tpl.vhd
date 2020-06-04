@@ -911,11 +911,23 @@ constant CALO_MU_ROM : natural range 0 to 2 := 2;
 
 -- ********************************************************
 -- definitions for tests (new cuts structure)
+type dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
+
+constant EG_EG_MASS_INV_VECTOR_WIDTH : positive := 2*EG_PT_VECTOR_WIDTH+EG_EG_COSH_COS_VECTOR_WIDTH;
+type eg_eg_mass_inv_vector_array is array (natural range <>, natural range <>) of std_logic_vector(EG_EG_MASS_INV_VECTOR_WIDTH-1 downto 0);
+constant JET_JET_MASS_INV_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+JET_JET_COSH_COS_VECTOR_WIDTH;
+type jet_jet_mass_inv_vector_array is array (natural range <>, natural range <>) of std_logic_vector(JET_JET_MASS_INV_VECTOR_WIDTH-1 downto 0);
+constant TAU_TAU_MASS_INV_VECTOR_WIDTH : positive := 2*TAU_PT_VECTOR_WIDTH+TAU_TAU_COSH_COS_VECTOR_WIDTH;
+type tau_tau_mass_inv_vector_array is array (natural range <>, natural range <>) of std_logic_vector(TAU_TAU_MASS_INV_VECTOR_WIDTH-1 downto 0);
 constant MU_MU_MASS_INV_VECTOR_WIDTH : positive := 2*MU_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH;
 type mu_mu_mass_inv_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_MASS_INV_VECTOR_WIDTH-1 downto 0);
 
-type dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
-
+constant EG_EG_TBPT_VECTOR_WIDTH : positive := 2+2*EG_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
+type eg_eg_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(EG_EG_TBPT_VECTOR_WIDTH-1 downto 0);
+constant JET_JET_TBPT_VECTOR_WIDTH : positive := 2+2*JET_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
+type jet_jet_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(JET_JET_TBPT_VECTOR_WIDTH-1 downto 0);
+constant TAU_TAU_TBPT_VECTOR_WIDTH : positive := 2+2*TAU_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
+type tau_tau_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(TAU_TAU_TBPT_VECTOR_WIDTH-1 downto 0);
 constant MU_MU_TBPT_VECTOR_WIDTH : positive := 2+2*MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 type mu_mu_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_TBPT_VECTOR_WIDTH-1 downto 0);
 

@@ -158,8 +158,8 @@ begin
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
-                        deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit
-                        dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit
+                        deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
+                        dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit, tbpt_threshold,
                         MU_MU_MASS_INV_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
                     )
@@ -186,8 +186,8 @@ begin
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
-                        deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit
-                        dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit
+                        deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
+                        dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit, tbpt_threshold,
                         MU_MU_MASS_INV_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
                     )
