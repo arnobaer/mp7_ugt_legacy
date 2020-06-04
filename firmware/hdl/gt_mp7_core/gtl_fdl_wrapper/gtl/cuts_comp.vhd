@@ -109,7 +109,7 @@ begin
                 -- MASS INV
                 mass_inv_i: if mass_cut = true and mass_type = INVARIANT_MASS_TYPE generate
                     mass_inv_comp <= '1' when mass_inv >= mass_lower_limit_t and mass_inv <= mass_upper_limit_t else '0';
-                end generate mass_div_dr_i;
+                end generate mass_inv_i;
                 -- MASS TRV
                 mass_trv_i: if mass_cut = true and mass_type = TRANSVERSE_MASS_TYPE generate
                     mass_trv_comp <= '1' when mass_trv >= mass_lower_limit_t and mass_trv <= mass_upper_limit_t else '0';
@@ -121,6 +121,6 @@ begin
                 -- MASS DIV DR
                 tbpt_i: if twobody_pt_cut = true  generate
                     twobody_pt_comp <= '1' when tbpt >= tbpt_threshold_t else '0';
-                end generate mass_div_dr_i;
+                end generate tbpt_i;
     
 end architecture rtl;
