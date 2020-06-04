@@ -28,7 +28,7 @@ entity mass_invariant_div_dr_calc is
         clk : in std_logic;
         deta_bin : in std_logic_vector(deta_bins_width-1 downto 0) := (others => '0');
         dphi_bin : in std_logic_vector(dphi_bins_width-1 downto 0) := (others => '0');
-        invariant_mass_sq_div2 : in std_logic_vector(pt1_width+pt2_width+cosh_cos_width-1 downto 0)        
+        invariant_mass_sq_div2 : in std_logic_vector(pt1_width+pt2_width+cosh_cos_width-1 downto 0);        
         mass_div_dr : out std_logic_vector(pt1_width+pt2_width+cosh_cos_width+inv_dr_sq_width-1 downto 0)
     );
 end mass_invariant_div_dr_calc;

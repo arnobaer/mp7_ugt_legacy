@@ -3,6 +3,7 @@
 -- Correlation condition for muons.
 
 -- Version history:
+-- HB 2020-06-04: updated process cuts_pipeline_p.
 -- HB 2020-06-03: first design with new cuts structure (cuts_comp.vhd).
 
 library ieee;
@@ -151,8 +152,8 @@ architecture rtl of muon_muon_corr_cond is
 begin
 
     -- Comparison with limits.
-    mass_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
-        mass_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
+    cuts_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
+        cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
             comp_l1: if (same_bx = true) and j>i generate
                 comp_i: entity work.cuts_comp
                     generic map(
@@ -196,8 +197,8 @@ begin
                         mass_div_dr_comp_pipe(i,j), tbpt_comp(i,j)
                     );
             end generate comp_l2;
-        end generate mass_l_2;
-    end generate mass_l_1;
+        end generate cuts_l_2;
+    end generate cuts_l_1;
     
 --  ***************************************************************************************
     -- Charge correlation comparison
@@ -223,7 +224,7 @@ begin
 --  ***************************************************************************************
 
     -- Pipeline stage for charge correlation comparison
-    cuts_pipeline_p: process(lhc_clk, charge_comp_double)
+    cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_trv_comp, tbpt_comp, charge_comp_double)
         begin
         if (lhc_clk'event and lhc_clk = '1') then
             deta_comp_pipe <= deta_comp;
