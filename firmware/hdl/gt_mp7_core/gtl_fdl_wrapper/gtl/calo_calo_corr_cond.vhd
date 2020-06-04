@@ -24,7 +24,7 @@ entity calo_calo_corr_cond is
         mass_type : natural;
         twobody_pt_cut: boolean;
 
-        calo1_object_low: natural;
+        nr_obj_calo1 : natural;
         calo1_object_high: natural;
         et_ge_mode_calo1: boolean;
         obj_type_calo1: natural := EG_TYPE;
@@ -48,6 +48,7 @@ entity calo_calo_corr_cond is
         phi_w2_lower_limit_calo1: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
         iso_lut_calo1: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0);
 
+        nr_obj_calo2 : natural;
         calo2_object_low: natural;
         calo2_object_high: natural;
         et_ge_mode_calo2: boolean;
@@ -98,13 +99,13 @@ entity calo_calo_corr_cond is
         lhc_clk: in std_logic;
         calo1_data_i: in calo_objects_array;
         calo2_data_i: in calo_objects_array;
-        deta : in deta_dphi_vector_array := (others => (others => (others => '0')));
-        dphi : in deta_dphi_vector_array := (others => (others => (others => '0')));
-        dr : in dr_vector_array := (others => (others => (others => '0')));
-        mass_inv : in calo_calo_mass_vector_array := (others => (others => (others => '0')));
-        mass_trv : in calo_calo_mass_vector_array := (others => (others => (others => '0')));
-        mass_div_dr : in calo_calo_mass_div_dr_vector_array := (others => (others => (others => '0')));
-        tbpt : in calo_calo_mass_tbpt_vector_array := (others => (others => (others => '0')));
+        deta : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        dphi : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        dr : in dr_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        mass_inv : in calo_calo_mass_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        mass_trv : in calo_calo_mass_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        mass_div_dr : in calo_calo_mass_div_dr_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        tbpt : in calo_calo_mass_tbpt_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
         condition_o: out std_logic
     );
 end calo_calo_corr_cond; 
