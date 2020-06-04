@@ -92,12 +92,8 @@ entity muon_muon_corr_cond is
         mass_div_dr_upper_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0);
         mass_div_dr_lower_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0);
 
-        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0);
+        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0)
         
-        mass_width: positive := 56;
-        mass_div_dr_width: positive := 83;
-        tbpt_width: positive := 50
-
    );
     port(
         lhc_clk: in std_logic;
@@ -162,7 +158,7 @@ begin
                         deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
                         dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit, tbpt_threshold,
-                        MU_MU_MASS_INV_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
+                        MU_MU_MASS_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
                     )
                     port map(
                         deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
@@ -190,7 +186,7 @@ begin
                         deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
                         dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit, tbpt_threshold,
-                        MU_MU_MASS_INV_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
+                        MU_MU_MASS_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
                     )
                     port map(
                         deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
