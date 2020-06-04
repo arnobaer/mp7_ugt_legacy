@@ -151,7 +151,7 @@ begin
     -- Comparison with limits.
     cuts_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
         cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
-            comp_l1: if (same_bx = true) and j>i generate
+            same_i: if (same_bx = true) and j>i generate
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
@@ -179,7 +179,8 @@ begin
                 mass_div_dr_comp_pipe(j,i) <= mass_div_dr_comp_t(i,j);
                 tbpt_comp(i,j) <= tbpt_comp_t(i,j);
                 tbpt_comp(j,i) <= tbpt_comp_t(i,j);                
-            comp_l2: if same_bx = false generate
+            end generate same_i;
+            not_same_i: if same_bx = false generate
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
@@ -193,7 +194,7 @@ begin
                         deta_comp(i,j), dphi_comp(i,j), dr_comp(i,j), mass_inv_comp(i,j), mass_trv_comp(i,j),
                         mass_div_dr_comp_pipe(i,j), tbpt_comp(i,j)
                     );
-            end generate comp_l2;
+            end generate not_same_i;
         end generate cuts_l_2;
     end generate cuts_l_1;
     
