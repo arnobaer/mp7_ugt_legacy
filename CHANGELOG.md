@@ -4,7 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
   
-## [v1.13.0] - 2020-02-19
+## [v1.14.0] - 2020-06-29
+### Comment
+
+- mp7_ugt firmware release v1.14.0 (new structure of correlation cuts outside of conditions).
+
+### Added
+- source files:
+  - ../gtl/calo_calo_corr_cond.vhd
+  - ../gtl/muon_muon_corr_cond.vhd
+  - ../gtl/cuts_comp.vhd
+  - ../gtl/mass_invariant_calc.vhd
+  - ../gtl/mass_invariant_div_dr_calc.vhd
+  - ../gtl/mass_transverse_calc.vhd
+
+### Changed
+- source files:
+  - ../gt_mp7_core/gt_mp7_core_pkg.vhd
+  - ../gt_mp7_core/gtl_module_tpl.vhd
+- simulation files:
+  - ../sim/scripts/templates/gtl_fdl_wrapper_tpl_questa_v2019.2.do
+- dep file:
+  - ../cfg/uGT_algo.dep
+
+## [v1.13.0] - 2020-06-19
 ### Comment
 
 - mp7_ugt firmware release v1.13.0 (added files for invariant mass divided by deltaR).
@@ -25,7 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - source files:
-  - ../gt_mp7_core/gt_mp7_core_pkg.vhd.vhd
+  - ../gt_mp7_core/gt_mp7_core_pkg.vhd
   - ../gtl/gtl_module_tpl.vhd
   - ../gtl/gtl_pkg_tpl.vhd
   - ../gtl/gtl_pkg_sim.vhd

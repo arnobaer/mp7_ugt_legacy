@@ -2,6 +2,7 @@
 -- Global Trigger Logic module.
 
 -- Version-history:
+-- HB 2020-06-29: v1.13.0: Added files for new structure of correlation cuts outside of conditions.
 -- HB 2020-06-17: v1.12.0: Added files for invariant mass divided by deltaR.
 -- HB 2020-06-17: v1.11.0: Added files for invariant mass with 3 objects.
 -- HB 2020-06-08: v1.10.0: Implemented new muon structure with "unconstraint pt" and "impact parameter".
