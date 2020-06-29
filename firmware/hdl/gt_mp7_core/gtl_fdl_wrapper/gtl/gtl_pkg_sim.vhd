@@ -2,9 +2,13 @@
 -- Package for constant and type definitions of GTL firmware in Global Trigger Upgrade system.
 
 -- Version history:
--- HB 2020-06-08: Implemented new muon structure with "unconstraint pt" and "impact parameter".
--- HB 2019-10-10: Moved constants for prescaler to fdl_pkg.vhd
--- HB 2019-10-08: Changed some values in LUTs MUON_COS_PHI_LUT and MUON_SIN_PHI_LUT according to LUTs from emulator (given by Len)
+-- HB 2020-06-26: added constants for rom width (for invariant mass divided by deltaR).
+-- HB 2020-06-17: cleaned up constants for invariant mass divided by deltaR.
+-- HB 2020-06-17: added constants for invariant mass divided by deltaR.
+-- HB 2020-06-16: inserted LUT for "unconstraint pt" (MU_UPT_LUT).
+-- HB 2020-06-08: changes for new muon structure with "unconstraint pt" and "impact parameter".
+-- HB 2019-10-10: moved constants for prescaler to fdl_pkg.vhd
+-- HB 2019-10-08: changed some values in LUTs MUON_COS_PHI_LUT and MUON_SIN_PHI_LUT according to LUTs from emulator (given by Len)
 -- HB 2019-06-03: inserted PRESCALER_FRACTION_WIDTH for fractional prescaler values
 -- HB 2019-05-02: inserted types for calo_cond_matrix.vhd.
 -- HB 2018-08-06: inserted constants and types for "Asymmetry" and "Centrality" (included in esums data structure).
@@ -628,14 +632,17 @@ subtype dr_squared_range_real is real range 0.0 to ((ETA_RANGE_REAL*(real(10**DE
 
 -- ********************************************************
 -- mass parameters
--- HB 2020-06-15: definition of mass_type:
+-- HB 2020-06-17: definition of mass_type:
 -- 0 => invariant mass
 -- 1 => transverse mass
 -- 2 => invariant mass with unconstraint pt
-constant MASS_TYPE_MAX_VALUE : natural := 2;
+-- 3 => invariant mass divided by deltaR
+
+constant MASS_TYPE_MAX_VALUE : natural := 3;
 constant INVARIANT_MASS_TYPE : natural range 0 to MASS_TYPE_MAX_VALUE := 0;
 constant TRANSVERSE_MASS_TYPE : natural range 0 to MASS_TYPE_MAX_VALUE := 1;
 constant INVARIANT_MASS_UPT_TYPE : natural range 0 to MASS_TYPE_MAX_VALUE := 2;
+constant INVARIANT_MASS_DIV_DR_TYPE : natural range 0 to MASS_TYPE_MAX_VALUE := 3;
 
 -- HB 2105-10-21: INV_MASS_LIMITS_PRECISION_ALL must be less than 2*INV_MASS_PT_PRECISION+INV_MASS_COSH_COS_PRECISION !!!
 -- constant INV_MASS_LIMITS_PRECISION_ALL : positive range 1 to 3 := 1; -- 1 => first digit after decimal point
@@ -876,6 +883,7 @@ constant CALO_DPHI_BINS : positive := CALO_PHI_BINS; -- 144
 
 constant CALO_DETA_BINS_WIDTH : positive := 8; -- => int(log2(CALO_DETA_BINS))+1 
 constant CALO_DPHI_BINS_WIDTH : positive := 8; -- => int(log2(CALO_DPHI_BINS))+1
+
 type calo_deta_bin_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_DETA_BINS_WIDTH-1 downto 0);
 type calo_dphi_bin_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_DPHI_BINS_WIDTH-1 downto 0);
 
@@ -888,6 +896,11 @@ constant JET_JET_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH
 constant JET_TAU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant TAU_TAU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 type calo_inv_dr_sq_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_INV_DR_SQ_VECTOR_WIDTH-1 downto 0);
+
+-- dummy
+constant EG_MU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
+constant JET_MU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
+constant TAU_MU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 
 constant CALO_CALO_MASS_DIV_DR_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+JET_JET_COSH_COS_VECTOR_WIDTH+JET_JET_INV_DR_SQ_VECTOR_WIDTH;
 type calo_calo_mass_div_dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_MASS_DIV_DR_VECTOR_WIDTH-1 downto 0);
@@ -954,6 +967,64 @@ constant TAU_TAU_TBPT_VECTOR_WIDTH : positive := 2+2*TAU_PT_VECTOR_WIDTH+2*CALO_
 type tau_tau_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(TAU_TAU_TBPT_VECTOR_WIDTH-1 downto 0);
 constant MU_MU_TBPT_VECTOR_WIDTH : positive := 2+2*MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 type mu_mu_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_TBPT_VECTOR_WIDTH-1 downto 0);
+
+constant EG_EG_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant EG_JET_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant EG_TAU_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant JET_JET_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant JET_TAU_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant TAU_TAU_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant EG_MU_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant JET_MU_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant TAU_MU_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
+constant MU_MU_DETA_BINS_WIDTH : positive := MU_DETA_BINS_WIDTH; 
+
+constant EG_EG_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant EG_JET_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant EG_TAU_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant JET_JET_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant JET_TAU_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant TAU_TAU_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant EG_MU_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant JET_MU_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant TAU_MU_DPHI_BINS_WIDTH : positive := CALO_DPHI_BINS_WIDTH; 
+constant MU_MU_DPHI_BINS_WIDTH : positive := MU_DPHI_BINS_WIDTH; 
+
+constant EG_EG_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant EG_JET_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant EG_TAU_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant JET_JET_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant JET_TAU_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant TAU_TAU_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant EG_MU_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant JET_MU_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant TAU_MU_DETA_BINS_WIDTH_ROM : positive := CALO_DETA_BINS_WIDTH; 
+constant MU_MU_DETA_BINS_WIDTH_ROM : positive := MU_DETA_BINS_WIDTH_ROM; 
+
+constant EG_EG_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant EG_JET_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant EG_TAU_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant JET_JET_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant JET_TAU_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant TAU_TAU_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant EG_MU_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant JET_MU_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant TAU_MU_DPHI_BINS_WIDTH_ROM : positive := CALO_DPHI_BINS_WIDTH; 
+constant MU_MU_DPHI_BINS_WIDTH_ROM : positive := MU_DPHI_BINS_WIDTH_ROM; 
+
+-- ROM selection
+constant CALO_CALO_ROM : natural range 0 to 2 := 0;
+constant EG_EG_ROM : natural range 0 to 2 := CALO_CALO_ROM;
+constant EG_JET_ROM : natural range 0 to 2 := CALO_CALO_ROM;
+constant EG_TAU_ROM : natural range 0 to 2 := CALO_CALO_ROM;
+constant JET_JET_ROM : natural range 0 to 2 := CALO_CALO_ROM;
+constant JET_TAU_ROM : natural range 0 to 2 := CALO_CALO_ROM;
+constant TAU_TAU_ROM : natural range 0 to 2 := CALO_CALO_ROM;
+constant MU_MU_ROM : natural range 0 to 2 := 1;
+constant CALO_MU_ROM : natural range 0 to 2 := 2;
+constant EG_MU_ROM : natural range 0 to 2 := CALO_MU_ROM;
+constant JET_MU_ROM : natural range 0 to 2 := CALO_MU_ROM;
+constant TAU_MU_ROM : natural range 0 to 2 := CALO_MU_ROM;
 
 -- ********************************************************
 -- conversion LUTs

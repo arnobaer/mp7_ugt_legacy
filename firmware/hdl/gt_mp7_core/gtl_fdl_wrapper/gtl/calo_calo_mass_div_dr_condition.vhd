@@ -79,7 +79,7 @@ entity calo_calo_mass_div_dr_condition is
         lhc_clk: in std_logic;
         calo1_data_i: in calo_objects_array;
         calo2_data_i: in calo_objects_array;
-        mass_div_dr : in calo_calo_mass_div_dr_vector_array;
+        mass_div_dr : in mass_div_dr_vector_array;
         condition_o: out std_logic
     );
 end calo_calo_mass_div_dr_condition; 
@@ -108,8 +108,8 @@ begin
     -- Comparison with limits.
     mass_l_1: for i in 0 to nr_objects_calo1-1 generate 
         mass_l_2: for j in 0 to nr_objects_calo2-1 generate
-            mass_calc_l1: if (obj_type_calo1 = obj_type_calo2) and (same_bx = true) and j>i generate
-                calculator_i: entity work.mass_div_dr_comp
+            mass_comp_l1: if (obj_type_calo1 = obj_type_calo2) and (same_bx = true) and j>i generate
+                comp_i: entity work.mass_div_dr_comp
                     generic map(
                         mass_div_dr_vector_width,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit 
@@ -120,9 +120,9 @@ begin
                     );
                 mass_div_dr_comp_pipe(i,j) <= mass_div_dr_comp_t(i,j);
                 mass_div_dr_comp_pipe(j,i) <= mass_div_dr_comp_t(i,j);
-            end generate mass_calc_l1;
-            mass_calc_l2: if (obj_type_calo1 /= obj_type_calo2) or (same_bx = false) generate
-                calculator_i: entity work.mass_div_dr_comp
+            end generate mass_comp_l1;
+            mass_comp_l2: if (obj_type_calo1 /= obj_type_calo2) or (same_bx = false) generate
+                comp_i: entity work.mass_div_dr_comp
                     generic map(
                         mass_div_dr_vector_width,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit 
@@ -131,7 +131,7 @@ begin
                         mass_div_dr(i,j)(mass_div_dr_vector_width-1 downto 0),
                         mass_div_dr_comp_pipe(i,j)
                     );
-            end generate mass_calc_l2;
+            end generate mass_comp_l2;
         end generate mass_l_2;
     end generate mass_l_1;
     

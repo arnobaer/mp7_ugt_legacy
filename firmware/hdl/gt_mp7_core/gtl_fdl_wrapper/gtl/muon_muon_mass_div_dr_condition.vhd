@@ -43,6 +43,10 @@ entity muon_muon_mass_div_dr_condition is
         requested_charge_muon1: string(1 to 3);
         qual_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0);
         iso_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0);
+        upt_cut_muon1 : boolean;
+        upt_upper_limit_muon1: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0);
+        upt_lower_limit_muon1: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0);
+        ip_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0);
 
         muon2_object_low: natural;
         muon2_object_high: natural;
@@ -68,6 +72,10 @@ entity muon_muon_mass_div_dr_condition is
         requested_charge_muon2: string(1 to 3);
         qual_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0);
         iso_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0);
+        upt_cut_muon2 : boolean;
+        upt_upper_limit_muon2: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0);
+        upt_lower_limit_muon2: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0);
+        ip_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0);
 
         requested_charge_correlation: string(1 to 2);
 
@@ -81,7 +89,7 @@ entity muon_muon_mass_div_dr_condition is
         muon2_data_i: in muon_objects_array;
         ls_charcorr_double: in muon_charcorr_double_array;
         os_charcorr_double: in muon_charcorr_double_array;
-        mass_div_dr : in mu_mu_mass_div_dr_vector_array;
+        mass_div_dr : in mass_div_dr_vector_array;
         condition_o: out std_logic
     );
 end muon_muon_mass_div_dr_condition; 
@@ -116,30 +124,30 @@ begin
     -- Comparison with limits.
     mass_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
         mass_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
-            mass_calc_l1: if (same_bx = true) and j>i generate
-                calculator_i: entity work.mass_div_dr_comp
+            mass_comp_l1: if (same_bx = true) and j>i generate
+                comp_i: entity work.mass_div_dr_comp
                     generic map(
                         MU_MU_MASS_DIV_DR_VECTOR_WIDTH,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit 
                     )
                     port map(
-                        mass_div_dr(i,j),
+                        mass_div_dr(i,j)(MU_MU_MASS_DIV_DR_VECTOR_WIDTH-1 downto 0),
                         mass_div_dr_comp_t(i,j)
                     );
                 mass_div_dr_comp_pipe(i,j) <= mass_div_dr_comp_t(i,j);
                 mass_div_dr_comp_pipe(j,i) <= mass_div_dr_comp_t(i,j);
-            end generate mass_calc_l1;
-            mass_calc_l2: if same_bx = false generate
-                calculator_i: entity work.mass_div_dr_comp
+            end generate mass_comp_l1;
+            mass_comp_l2: if same_bx = false generate
+                comp_i: entity work.mass_div_dr_comp
                     generic map(
                         MU_MU_MASS_DIV_DR_VECTOR_WIDTH,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit 
                     )
                     port map(
-                        mass_div_dr(i,j),
+                        mass_div_dr(i,j)(MU_MU_MASS_DIV_DR_VECTOR_WIDTH-1 downto 0),
                         mass_div_dr_comp_pipe(i,j)
                     );
-            end generate mass_calc_l2;
+            end generate mass_comp_l2;
         end generate mass_l_2;
     end generate mass_l_1;
     
@@ -168,7 +176,11 @@ begin
                 phi_w2_lower_limit_muon1(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
                 requested_charge_muon1,
                 qual_lut_muon1,
-                iso_lut_muon1
+                iso_lut_muon1,
+                upt_cut_muon1,
+                upt_upper_limit_muon1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                upt_lower_limit_muon1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                ip_lut_muon1
             )
             port map(muon1_data_i(i), muon1_obj_vs_templ(i,1));
     end generate obj_templ1_l;
@@ -196,7 +208,11 @@ begin
                 phi_w2_lower_limit_muon2(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
                 requested_charge_muon2,
                 qual_lut_muon2,
-                iso_lut_muon2
+                iso_lut_muon2,
+                upt_cut_muon2,
+                upt_upper_limit_muon2(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                upt_lower_limit_muon2(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                ip_lut_muon2
             )
             port map(muon2_data_i(i), muon2_obj_vs_templ(i,1));
     end generate obj_templ2_l_l;
