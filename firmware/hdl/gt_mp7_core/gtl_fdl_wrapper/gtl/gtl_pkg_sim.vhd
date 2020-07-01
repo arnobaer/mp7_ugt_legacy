@@ -1008,7 +1008,7 @@ constant CALO_MU_ROM : natural range 0 to 2 := 2;
 
 -- ********************************************************
 -- definitions for tests (new cuts structure)
-type dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
+-- type dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
 
 constant CALO_CALO_MASS_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+JET_JET_COSH_COS_VECTOR_WIDTH;
 type calo_calo_mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_MASS_VECTOR_WIDTH-1 downto 0);
