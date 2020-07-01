@@ -25,6 +25,7 @@ entity calo_calo_corr_cond is
         twobody_pt_cut: boolean;
 
         nr_obj_calo1 : natural;
+        calo1_object_low: natural;
         calo1_object_high: natural;
         et_ge_mode_calo1: boolean;
         obj_type_calo1: natural := EG_TYPE;
@@ -121,19 +122,19 @@ architecture rtl of calo_calo_corr_cond is
     signal calo1_obj_vs_templ, calo1_obj_vs_templ_pipe : std_logic_2dim_array(calo1_object_low to calo1_object_high, 1 to 1);
     signal calo2_obj_vs_templ, calo2_obj_vs_templ_pipe : std_logic_2dim_array(calo2_object_low to calo2_object_high, 1 to 1);
 
-    signal deta_comp_t, deta_comp, deta_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal deta_comp_t, deta_comp, deta_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
-    signal dphi_comp_t, dphi_comp, dphi_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal dphi_comp_t, dphi_comp, dphi_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
-    signal dr_comp_t, dr_comp, dr_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal dr_comp_t, dr_comp, dr_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
-    signal mass_inv_comp_t, mass_inv_comp, mass_inv_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal mass_inv_comp_t, mass_inv_comp, mass_inv_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
-    signal mass_trv_comp_t, mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal mass_trv_comp_t, mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
-    signal mass_div_dr_comp_t, mass_div_dr_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal mass_div_dr_comp_t, mass_div_dr_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
-    signal tbpt_comp_t, tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal tbpt_comp_t, tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
 
     signal condition_and_or : std_logic;

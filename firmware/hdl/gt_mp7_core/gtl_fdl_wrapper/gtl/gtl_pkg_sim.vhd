@@ -624,6 +624,7 @@ constant DETA_DPHI_PRECISION_ALL: positive := max(MAX_DETA_DPHI_TEMP_3, MAX_DETA
 
 constant DETA_DPHI_VECTOR_WIDTH_ALL: positive := log2c(max(integer(ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION_ALL))),integer(PHI_MAX*(real(10**DETA_DPHI_PRECISION_ALL))))); -- length of DETA/DPHI vector for Delta-R calculation
 type deta_dphi_vector_array is array (natural range <>, natural range <>) of std_logic_vector(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
+type delta_r_vector_array is array (natural range <>, natural range <>) of std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
 
 -- subtypes for ranges of limits
 subtype diff_eta_range_real is real range 0.0 to ETA_RANGE_REAL;
