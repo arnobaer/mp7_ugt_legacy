@@ -1011,6 +1011,9 @@ constant TAU_TAU_MASS_VECTOR_WIDTH : positive := 2*TAU_PT_VECTOR_WIDTH+TAU_TAU_C
 constant MU_MU_MASS_VECTOR_WIDTH : positive := 2*MU_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH;
 type mu_mu_mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_MASS_VECTOR_WIDTH-1 downto 0);
 
+constant CALO_MUON_MASS_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH;
+type calo_muon_mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_MUON_MASS_VECTOR_WIDTH-1 downto 0);
+
 constant CALO_CALO_TBPT_VECTOR_WIDTH : positive := 2+2*JET_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
 type calo_calo_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_TBPT_VECTOR_WIDTH-1 downto 0);
 constant EG_EG_TBPT_VECTOR_WIDTH : positive := 2+2*EG_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
