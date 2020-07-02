@@ -144,7 +144,7 @@ architecture rtl of muon_muon_mass_3_obj_condition is
     signal muon1_obj_vs_templ, muon1_obj_vs_templ_pipe : muon1_object_vs_template_array;
     signal muon2_obj_vs_templ, muon2_obj_vs_templ_pipe : muon2_object_vs_template_array;
     signal muon3_obj_vs_templ, muon3_obj_vs_templ_pipe : muon3_object_vs_template_array;
--- HB 2017-03-28: changed default values to provide all combinations of cuts (eg.: MASS and DR).
+
     signal mass_comp, mass_comp_pipe : 
         std_logic_3dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) := (others => (others => (others => '0')));
 

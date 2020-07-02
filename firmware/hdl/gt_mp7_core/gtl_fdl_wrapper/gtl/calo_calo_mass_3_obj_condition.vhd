@@ -120,6 +120,9 @@ architecture rtl of calo_calo_mass_3_obj_condition is
     signal calo2_obj_vs_templ, calo2_obj_vs_templ_pipe : calo2_object_vs_template_array;
     signal calo3_obj_vs_templ, calo3_obj_vs_templ_pipe : calo3_object_vs_template_array;
 
+    signal mass_comp, mass_comp_pipe : 
+        std_logic_3dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) := (others => (others => (others => '0')));
+
     type sum_mass_array is array(0 to nr_obj-1, 0 to nr_obj-1, 0 to nr_obj-1) of std_logic_vector(mass_width+1 downto 0);
     signal sum_mass, sum_mass_temp : sum_mass_array := (others => (others => (others => (others => '0'))));   
 
