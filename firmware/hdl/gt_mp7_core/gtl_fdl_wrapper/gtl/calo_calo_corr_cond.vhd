@@ -159,7 +159,7 @@ begin
                         mass_width, mass_div_dr_width, tbpt_width
                     )
                     port map(
-                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j)(mass_width-1 downto 0), mass_trv(i,j)(mass_width-1 downto 0), mass_div_dr(i,j)(mass_div_dr_width-1 downto 0), tbpt(i,j),
+                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
                         deta_comp_t(i,j), dphi_comp_t(i,j), dr_comp_t(i,j), mass_inv_comp_t(i,j), mass_trv_comp_t(i,j),
                         mass_div_dr_comp_t(i,j), tbpt_comp_t(i,j)
                     );
