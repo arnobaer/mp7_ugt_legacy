@@ -47,10 +47,10 @@ entity cuts_comp is
         deta: in std_logic_vector(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0) := (others => '0');
         dphi: in std_logic_vector(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0) := (others => '0');
         dr: in std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0) := (others => '0');
-        mass_inv: in std_logic_vector(mass_width-1 downto 0) := (others => '0');
-        mass_trv: in std_logic_vector(mass_width-1 downto 0) := (others => '0');
-        mass_div_dr: in std_logic_vector(mass_div_dr_width-1 downto 0) := (others => '0');
-        tbpt: in std_logic_vector(tbpt_width-1 downto 0) := (others => '0');
+        mass_inv: in std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0) := (others => '0');
+        mass_trv: in std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0) := (others => '0');
+        mass_div_dr: in std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        tbpt: in std_logic_vector(MAX_TBPT_VECTOR_WIDTH-1 downto 0) := (others => '0');
         deta_comp: out std_logic := '1';
         dphi_comp: out std_logic := '1';
         dr_comp: out std_logic := '1';
@@ -108,19 +108,19 @@ begin
                 end generate dr_i;
                 -- MASS INV
                 mass_inv_i: if mass_cut = true and mass_type = INVARIANT_MASS_TYPE generate
-                    mass_inv_comp <= '1' when mass_inv >= mass_lower_limit_t and mass_inv <= mass_upper_limit_t else '0';
+                    mass_inv_comp <= '1' when mass_inv(mass_width-1 downto 0) >= mass_lower_limit_t and mass_inv(mass_width-1 downto 0) <= mass_upper_limit_t else '0';
                 end generate mass_inv_i;
                 -- MASS TRV
                 mass_trv_i: if mass_cut = true and mass_type = TRANSVERSE_MASS_TYPE generate
-                    mass_trv_comp <= '1' when mass_trv >= mass_lower_limit_t and mass_trv <= mass_upper_limit_t else '0';
+                    mass_trv_comp <= '1' when mass_trv(mass_width-1 downto 0) >= mass_lower_limit_t and mass_trv(mass_width-1 downto 0) <= mass_upper_limit_t else '0';
                 end generate mass_trv_i;
                 -- MASS DIV DR
                 mass_div_dr_i: if mass_cut = true and mass_type = INVARIANT_MASS_DIV_DR_TYPE generate
-                    mass_div_dr_comp <= '1' when mass_div_dr >= mass_div_dr_lower_limit_t and mass_div_dr <= mass_div_dr_upper_limit_t else '0';
+                    mass_div_dr_comp <= '1' when mass_div_dr(mass_div_dr_width-1 downto 0) >= mass_div_dr_lower_limit_t and mass_div_dr(mass_div_dr_width-1 downto 0) <= mass_div_dr_upper_limit_t else '0';
                 end generate mass_div_dr_i;
                 -- MASS DIV DR
                 tbpt_i: if twobody_pt_cut = true  generate
-                    twobody_pt_comp <= '1' when tbpt >= tbpt_threshold_t else '0';
+                    twobody_pt_comp <= '1' when tbpt(tbpt_width-1 downto 0) >= tbpt_threshold_t else '0';
                 end generate tbpt_i;
     
 end architecture rtl;
