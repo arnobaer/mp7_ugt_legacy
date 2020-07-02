@@ -105,7 +105,7 @@ entity calo_muon_correlation_condition is
         mass_div_dr_upper_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0);
         mass_div_dr_lower_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0);
 
-        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0)
+        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0);
         
         mass_width: positive := 56;
         mass_div_dr_width: positive := 83;
@@ -158,7 +158,7 @@ architecture rtl of calo_muon_correlation_condition is
 begin
 
     -- Comparison with limits.
-    cuts_l_1: for i in 0 to 0 to nr_obj_calo1-1 generate 
+    cuts_l_1: for i in 0 to nr_obj_calo1-1 generate 
         cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
                 comp_i: entity work.cuts_comp
                     generic map(
