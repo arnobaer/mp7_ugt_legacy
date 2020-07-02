@@ -3,6 +3,7 @@
 -- Condition for invariant mass with 3 calo objects.
 
 -- Version history:
+-- HB 2020-07-02: changed for new cuts structure (calculation outside of conditions). New name.
 -- HB 2020-04-27: reverted to former version.
 -- HB 2020-04-24: update instance of mass_calculator.
 -- HB 2020-02-25: separated sum and comp.
@@ -16,7 +17,7 @@ use ieee.std_logic_arith.all;
 
 use work.gtl_pkg.all;
 
-entity calo_mass_3_obj_condition is
+entity calo_calo_mass_3_obj_condition is
      generic(
 
         nr_obj: natural := NR_EG_OBJECTS;
@@ -94,28 +95,22 @@ entity calo_mass_3_obj_condition is
         mass_upper_limit_vector: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0);
         mass_lower_limit_vector: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0);
 
-        pt_width: positive; 
-        cosh_cos_precision : positive;
-        cosh_cos_width: positive
+        mass_width: positive := 56
         
     );
     port(
         lhc_clk: in std_logic;
         calo_data_i: in calo_objects_array;
-        pt : in diff_inputs_array;
-        cosh_deta : in calo_cosh_cos_vector_array;
-        cos_dphi : in calo_cosh_cos_vector_array;
+        mass_inv : in mass_vector_array(0 to nr_obj-1, 0 to nr_obj-1) := (others => (others => (others => '0')));
         condition_o: out std_logic
     );
-end calo_mass_3_obj_condition; 
+end calo_calo_mass_3_obj_condition; 
 
-architecture rtl of calo_mass_3_obj_condition is
+architecture rtl of calo_calo_mass_3_obj_condition is
 
 -- fixed pipeline structure, 2 stages total
     constant obj_vs_templ_pipeline_stage: boolean := true; -- pipeline stage for obj_vs_templ (intermediate flip-flop)
     constant conditions_pipeline_stage: boolean := true; -- pipeline stage for condition output 
-
-    constant mass_vector_width: positive := pt_width+pt_width+cosh_cos_width; 
 
     type calo1_object_vs_template_array is array (calo1_object_low to calo1_object_high, 1 to 1) of std_logic;
     type calo2_object_vs_template_array is array (calo2_object_low to calo2_object_high, 1 to 1) of std_logic;
@@ -124,13 +119,8 @@ architecture rtl of calo_mass_3_obj_condition is
     signal calo1_obj_vs_templ, calo1_obj_vs_templ_pipe : calo1_object_vs_template_array;
     signal calo2_obj_vs_templ, calo2_obj_vs_templ_pipe : calo2_object_vs_template_array;
     signal calo3_obj_vs_templ, calo3_obj_vs_templ_pipe : calo3_object_vs_template_array;
--- HB 2017-03-28: changed default values to provide all combinations of cuts (eg.: MASS and DR).
-    signal mass_comp, mass_comp_pipe : 
-        std_logic_3dim_array(0 to nr_obj-1, 0 to nr_obj-1, 0 to nr_obj-1) := (others => (others => (others => '0')));
 
-    type inv_mass_value_array is array(0 to nr_obj-1, 0 to nr_obj-1) of std_logic_vector(mass_vector_width-1 downto 0);
-    signal inv_mass_value, inv_mass_value_temp : inv_mass_value_array := (others => (others => (others => '0')));   
-    type sum_mass_array is array(0 to nr_obj-1, 0 to nr_obj-1, 0 to nr_obj-1) of std_logic_vector(mass_vector_width+1 downto 0);
+    type sum_mass_array is array(0 to nr_obj-1, 0 to nr_obj-1, 0 to nr_obj-1) of std_logic_vector(mass_width+1 downto 0);
     signal sum_mass, sum_mass_temp : sum_mass_array := (others => (others => (others => (others => '0'))));   
 
     signal condition_and_or : std_logic;
@@ -139,40 +129,13 @@ begin
 
     -- *** section: CUTs - begin ***************************************************************************************
 
-    -- Comparison with limits.
-    mass_l_1: for i in 0 to nr_obj-1 generate 
-        mass_l_2: for j in 0 to nr_obj-1 generate
-            mass_calc_l: if j>i generate
-                mass_calculator_i: entity work.mass_calculator
-                    generic map(
-                        mass_type => 0,
-                        mass_upper_limit_vector => mass_upper_limit_vector,
-                        mass_lower_limit_vector => mass_lower_limit_vector,
-                        pt1_width => pt_width, 
-                        pt2_width => pt_width, 
-                        cosh_cos_width => cosh_cos_width,
-                        mass_cosh_cos_precision => cosh_cos_precision
-                    )
-                    port map(
-                        pt1 => pt(i)(pt_width-1 downto 0),
-                        pt2 => pt(j)(pt_width-1 downto 0),
-                        cosh_deta => cosh_deta(i,j),
-                        cos_dphi => cos_dphi(i,j),
-                        sim_invariant_mass_sq_div2 => inv_mass_value_temp(i,j)
-                    );
-                inv_mass_value(i,j) <= inv_mass_value_temp(i,j);
-                inv_mass_value(j,i) <= inv_mass_value_temp(i,j);
-            end generate mass_calc_l;
-        end generate mass_l_2;
-    end generate mass_l_1;
-
     l1_sum: for i in 0 to nr_obj-1 generate
         l2_sum: for j in 0 to nr_obj-1 generate
             l3_sum: for k in 0 to nr_obj-1 generate
                 sum_mass_l: if j>i and k>i and k>j generate
                     sum_mass_calc_i: entity work.sum_mass_calc
-                        generic map(mass_vector_width)  
-                        port map(inv_mass_value(i,j), inv_mass_value(i,k), inv_mass_value(j,k), sum_mass_temp(i,j,k));
+                        generic map(mass_width)  
+                        port map(mass_inv(i,j), mass_inv(i,k), mass_inv(j,k), sum_mass_temp(i,j,k));
                     sum_mass(i,j,k) <= sum_mass_temp(i,j,k);
                     sum_mass(i,k,j) <= sum_mass_temp(i,j,k);
                     sum_mass(j,i,k) <= sum_mass_temp(i,j,k);
@@ -187,8 +150,8 @@ begin
     l1_comp: for i in calo1_object_low to calo1_object_high generate
         l2_comp: for j in calo2_object_low to calo2_object_high generate
             l3_comp: for k in calo3_object_low to calo3_object_high generate
-                mass_comp(i,j,k) <= '1' when sum_mass(i,j,k) >= mass_lower_limit_vector(mass_vector_width-1 downto 0) and
-                    sum_mass(i,j,k) <= mass_upper_limit_vector(mass_vector_width-1 downto 0) else '0';
+                mass_comp(i,j,k) <= '1' when sum_mass(i,j,k) >= mass_lower_limit_vector(mass_width-1 downto 0) and
+                    sum_mass(i,j,k) <= mass_upper_limit_vector(mass_width-1 downto 0) else '0';
             end generate l3_comp;    
         end generate l2_comp;
     end generate l1_comp;
