@@ -252,7 +252,7 @@ begin
     end generate muon2_obj_l;
 
     -- Pipeline stage for obj_vs_templ
-    obj_vs_templ_pipeline_p: process(lhc_clk, muon1_obj_vs_templ, muon2_obj_vs_templ)
+    obj_vs_templ_pipeline_p: process(lhc_clk, calo1_obj_vs_templ, muon2_obj_vs_templ)
         begin
         if (lhc_clk'event and lhc_clk = '1') then
             calo1_obj_vs_templ_pipe <= calo1_obj_vs_templ;
@@ -261,7 +261,7 @@ begin
     end process;
 
     -- "Matrix" of permutations in an and-or-structure.
-    matrix_p: process(calo1_obj_vs_templ_pipe, muon2_obj_vs_templ_pipe, charge_comp_double_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_trv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
+    matrix_p: process(calo1_obj_vs_templ_pipe, muon2_obj_vs_templ_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_trv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
         variable index : integer := 0;
         variable obj_vs_templ_vec : std_logic_vector((calo1_object_high-calo1_object_low+1)*(muon2_object_high-muon2_object_low+1) downto 1) := (others => '0');
         variable condition_and_or_tmp : std_logic := '0';
@@ -272,7 +272,7 @@ begin
         for i in calo1_object_low to calo1_object_high loop 
             for j in muon2_object_low to muon2_object_high loop
                     index := index + 1;
-                    obj_vs_templ_vec(index) := calo1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and      charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                    obj_vs_templ_vec(index) := calo1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
             end loop;
         end loop;
         for i in 1 to index loop 
