@@ -1052,6 +1052,10 @@ type tau_tau_mass_tbpt_vector_array is array (natural range <>, natural range <>
 constant MU_MU_TBPT_VECTOR_WIDTH : positive := 2+2*MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 type mu_mu_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_TBPT_VECTOR_WIDTH-1 downto 0);
 
+constant EG_MU_TBPT_VECTOR_WIDTH : positive := 2+EG_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
+constant JET_MU_TBPT_VECTOR_WIDTH : positive := 2+JET_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
+constant TAU_MU_TBPT_VECTOR_WIDTH : positive := 2+TAU_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
+
 constant MAX_TBPT_VECTOR_WIDTH : positive := 2+JET_PT_VECTOR_WIDTH+ETM_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 type tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_TBPT_VECTOR_WIDTH-1 downto 0);
 
