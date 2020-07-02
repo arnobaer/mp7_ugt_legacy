@@ -28,8 +28,8 @@ entity mass_invariant_div_dr_calc is
         clk : in std_logic;
         deta_bin : in std_logic_vector(deta_bins_width-1 downto 0) := (others => '0');
         dphi_bin : in std_logic_vector(dphi_bins_width-1 downto 0) := (others => '0');
-        invariant_mass_sq_div2 : in std_logic_vector(pt1_width+pt2_width+cosh_cos_width-1 downto 0);        
-        mass_div_dr : out std_logic_vector(pt1_width+pt2_width+cosh_cos_width+inv_dr_sq_width-1 downto 0)
+        invariant_mass_sq_div2 : in std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0);        
+        mass_div_dr : out std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0')
     );
 end mass_invariant_div_dr_calc;
 
@@ -85,6 +85,6 @@ begin
     end generate rom_lut_muon_sel;
 
 -- LUT value for deta=0 and dphi=0 (dR=0, 1/dR=undefined) => 0, which means mass_div_dr is on it's maximum
-    mass_div_dr <= (invariant_mass_sq_div2 * inv_dr_sq) when (inv_dr_sq > 0) else max_mass_div_dr;
+    mass_div_dr(mass_div_dr_vector_width-1 downto 0) <= (invariant_mass_sq_div2 * inv_dr_sq) when (inv_dr_sq > 0) else max_mass_div_dr;
     
 end architecture rtl;
