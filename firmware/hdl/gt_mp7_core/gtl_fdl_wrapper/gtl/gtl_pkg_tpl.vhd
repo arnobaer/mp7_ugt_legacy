@@ -889,28 +889,23 @@ type calo_dphi_bin_vector_array is array (natural range <>, natural range <>) of
 
 constant CALO_INV_DR_SQ_LUT_MAX_VAL : natural := 52847140;
 constant CALO_INV_DR_SQ_VECTOR_WIDTH : natural := 26; -- => log2(CALO_INV_DR_SQ_LUT_MAX_VAL)
+type calo_inv_dr_sq_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_INV_DR_SQ_VECTOR_WIDTH-1 downto 0);
 constant EG_EG_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant EG_JET_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant EG_TAU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant JET_JET_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant JET_TAU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant TAU_TAU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
-type calo_inv_dr_sq_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_INV_DR_SQ_VECTOR_WIDTH-1 downto 0);
-
--- dummy ?
 constant EG_MU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant JET_MU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 constant TAU_MU_INV_DR_SQ_VECTOR_WIDTH : natural := CALO_INV_DR_SQ_VECTOR_WIDTH;
 
--- constant CALO_CALO_MASS_DIV_DR_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+JET_JET_COSH_COS_VECTOR_WIDTH+JET_JET_INV_DR_SQ_VECTOR_WIDTH;
--- type calo_calo_mass_div_dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_MASS_DIV_DR_VECTOR_WIDTH-1 downto 0);
 constant EG_EG_MASS_DIV_DR_VECTOR_WIDTH : positive := 2*EG_PT_VECTOR_WIDTH+EG_EG_COSH_COS_VECTOR_WIDTH+EG_EG_INV_DR_SQ_VECTOR_WIDTH;
 constant EG_JET_MASS_DIV_DR_VECTOR_WIDTH : positive := EG_PT_VECTOR_WIDTH+JET_PT_VECTOR_WIDTH+EG_JET_COSH_COS_VECTOR_WIDTH+EG_JET_INV_DR_SQ_VECTOR_WIDTH;
 constant EG_TAU_MASS_DIV_DR_VECTOR_WIDTH : positive := EG_PT_VECTOR_WIDTH+TAU_PT_VECTOR_WIDTH+EG_TAU_COSH_COS_VECTOR_WIDTH+EG_TAU_INV_DR_SQ_VECTOR_WIDTH;
 constant JET_JET_MASS_DIV_DR_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+JET_JET_COSH_COS_VECTOR_WIDTH+JET_JET_INV_DR_SQ_VECTOR_WIDTH;
 constant JET_TAU_MASS_DIV_DR_VECTOR_WIDTH : positive := JET_PT_VECTOR_WIDTH+TAU_PT_VECTOR_WIDTH+JET_TAU_COSH_COS_VECTOR_WIDTH+JET_TAU_INV_DR_SQ_VECTOR_WIDTH;
 constant TAU_TAU_MASS_DIV_DR_VECTOR_WIDTH : positive := 2*TAU_PT_VECTOR_WIDTH+TAU_TAU_COSH_COS_VECTOR_WIDTH+TAU_TAU_INV_DR_SQ_VECTOR_WIDTH;
-
 constant EG_MU_MASS_DIV_DR_VECTOR_WIDTH : positive := EG_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+EG_MU_COSH_COS_VECTOR_WIDTH+EG_MU_INV_DR_SQ_VECTOR_WIDTH;
 constant JET_MU_MASS_DIV_DR_VECTOR_WIDTH : positive := JET_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+JET_MU_COSH_COS_VECTOR_WIDTH+JET_MU_INV_DR_SQ_VECTOR_WIDTH;
 constant TAU_MU_MASS_DIV_DR_VECTOR_WIDTH : positive := TAU_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+TAU_MU_COSH_COS_VECTOR_WIDTH+TAU_MU_INV_DR_SQ_VECTOR_WIDTH;
@@ -936,16 +931,12 @@ constant MU_MU_INV_DR_SQ_VECTOR_WIDTH : natural := 28; -- => log2(MU_MU_INV_DR_S
 type muon_inv_dr_sq_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_INV_DR_SQ_VECTOR_WIDTH-1 downto 0);
 
 constant MAX_INV_DR_SQ_VECTOR_WIDTH : positive := MU_MU_INV_DR_SQ_VECTOR_WIDTH; -- 28, max(CALO_INV_DR_SQ_VECTOR_WIDTH, MU_INV_DR_SQ_VECTOR_WIDTH)
--- constant MAX_CALO_PT_VECTOR_WIDTH : positive := max(EG_PT_VECTOR_WIDTH, JET_PT_VECTOR_WIDTH, TAU_PT_VECTOR_WIDTH);
--- constant MAX_PT_VECTOR_WIDTH : positive := max(MAX_CALO_PT_VECTOR_WIDTH, MU_PT_VECTOR_WIDTH); -- 14 (JET_PT_VECTOR_WIDTH)
--- constant MAX_COSH_COS_VECTOR_WIDTH : positive := max(CALO_COSH_COS_VECTOR_WIDTH, CALO_MUON_COSH_COS_VECTOR_WIDTH, MU_MU_COSH_COS_VECTOR_WIDTH); -- 27 (CALO_MUON_COSH_COS_VECTOR_WIDTH)
-
-constant MU_MU_MASS_DIV_DR_VECTOR_WIDTH : positive := 2*MU_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH+MU_MU_INV_DR_SQ_VECTOR_WIDTH;
--- type mu_mu_mass_div_dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_MASS_DIV_DR_VECTOR_WIDTH-1 downto 0);
+type max_inv_dr_sq_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_INV_DR_SQ_VECTOR_WIDTH-1 downto 0);
 
 constant MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR : positive := 84; -- 2*14+27+28=83, 2*MAX_PT_VECTOR_WIDTH+MAX_COSH_COS_VECTOR_WIDTH+MAX_INV_DR_SQ_VECTOR_WIDTH, width 84 used for hex notation !
 type mass_div_dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0);
-type max_inv_dr_sq_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_INV_DR_SQ_VECTOR_WIDTH-1 downto 0);
+
+constant MU_MU_MASS_DIV_DR_VECTOR_WIDTH : positive := 2*MU_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH+MU_MU_INV_DR_SQ_VECTOR_WIDTH;
 
 constant EG_EG_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
 constant EG_JET_DETA_BINS_WIDTH : positive := CALO_DETA_BINS_WIDTH; 
@@ -1007,49 +998,31 @@ constant TAU_MU_ROM : natural range 0 to 2 := CALO_MU_ROM;
 
 -- ********************************************************
 -- definitions for tests (new cuts structure)
--- type dr_vector_array is array (natural range <>, natural range <>) of std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
 
--- constant CALO_CALO_MASS_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+JET_JET_COSH_COS_VECTOR_WIDTH;
--- type calo_calo_mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_MASS_VECTOR_WIDTH-1 downto 0);
 constant EG_EG_MASS_VECTOR_WIDTH : positive := 2*EG_PT_VECTOR_WIDTH+EG_EG_COSH_COS_VECTOR_WIDTH;
 constant EG_JET_MASS_VECTOR_WIDTH : positive := EG_PT_VECTOR_WIDTH+JET_PT_VECTOR_WIDTH+EG_JET_COSH_COS_VECTOR_WIDTH;
 constant EG_TAU_MASS_VECTOR_WIDTH : positive := EG_PT_VECTOR_WIDTH+TAU_PT_VECTOR_WIDTH+EG_TAU_COSH_COS_VECTOR_WIDTH;
 constant JET_JET_MASS_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+JET_JET_COSH_COS_VECTOR_WIDTH;
 constant JET_TAU_MASS_VECTOR_WIDTH : positive := JET_PT_VECTOR_WIDTH+TAU_PT_VECTOR_WIDTH+JET_TAU_COSH_COS_VECTOR_WIDTH;
 constant TAU_TAU_MASS_VECTOR_WIDTH : positive := 2*TAU_PT_VECTOR_WIDTH+TAU_TAU_COSH_COS_VECTOR_WIDTH;
-
-constant MU_MU_MASS_VECTOR_WIDTH : positive := 2*MU_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH;
--- type mu_mu_mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_MASS_VECTOR_WIDTH-1 downto 0);
-
--- constant CALO_MUON_MASS_VECTOR_WIDTH : positive := 2*JET_PT_VECTOR_WIDTH+CALO_MUON_COSH_COS_VECTOR_WIDTH;
--- type calo_muon_mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_MUON_MASS_VECTOR_WIDTH-1 downto 0);
 constant EG_MU_MASS_VECTOR_WIDTH : positive := EG_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+EG_MU_COSH_COS_VECTOR_WIDTH;
 constant JET_MU_MASS_VECTOR_WIDTH : positive := JET_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+JET_MU_COSH_COS_VECTOR_WIDTH;
 constant TAU_MU_MASS_VECTOR_WIDTH : positive := TAU_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+TAU_MU_COSH_COS_VECTOR_WIDTH;
+constant MU_MU_MASS_VECTOR_WIDTH : positive := 2*MU_PT_VECTOR_WIDTH+MU_MU_COSH_COS_VECTOR_WIDTH;
 
 constant MAX_MASS_VECTOR_WIDTH : positive := JET_PT_VECTOR_WIDTH+ETM_PT_VECTOR_WIDTH+CALO_MUON_COSH_COS_VECTOR_WIDTH;
 type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0);
 
--- constant CALO_CALO_TBPT_VECTOR_WIDTH : positive := 2+2*JET_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
--- type calo_calo_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_TBPT_VECTOR_WIDTH-1 downto 0);
 constant EG_EG_TBPT_VECTOR_WIDTH : positive := 2+2*EG_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
--- type eg_eg_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(EG_EG_TBPT_VECTOR_WIDTH-1 downto 0);
 constant EG_JET_TBPT_VECTOR_WIDTH : positive := 2+EG_PT_VECTOR_WIDTH+JET_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
--- type eg_jet_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(EG_JET_TBPT_VECTOR_WIDTH-1 downto 0);
 constant EG_TAU_TBPT_VECTOR_WIDTH : positive := 2+EG_PT_VECTOR_WIDTH+TAU_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
--- type eg_tau_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(EG_TAU_TBPT_VECTOR_WIDTH-1 downto 0);
 constant JET_JET_TBPT_VECTOR_WIDTH : positive := 2+2*JET_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
--- type jet_jet_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(JET_JET_TBPT_VECTOR_WIDTH-1 downto 0);
 constant JET_TAU_TBPT_VECTOR_WIDTH : positive := 2+JET_PT_VECTOR_WIDTH+TAU_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
--- type jet_tau_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(JET_TAU_TBPT_VECTOR_WIDTH-1 downto 0);
 constant TAU_TAU_TBPT_VECTOR_WIDTH : positive := 2+2*TAU_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
--- type tau_tau_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(TAU_TAU_TBPT_VECTOR_WIDTH-1 downto 0);
-constant MU_MU_TBPT_VECTOR_WIDTH : positive := 2+2*MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
--- type mu_mu_mass_tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MU_MU_TBPT_VECTOR_WIDTH-1 downto 0);
-
 constant EG_MU_TBPT_VECTOR_WIDTH : positive := 2+EG_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 constant JET_MU_TBPT_VECTOR_WIDTH : positive := 2+JET_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 constant TAU_MU_TBPT_VECTOR_WIDTH : positive := 2+TAU_PT_VECTOR_WIDTH+MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
+constant MU_MU_TBPT_VECTOR_WIDTH : positive := 2+2*MU_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 
 constant MAX_TBPT_VECTOR_WIDTH : positive := 2+JET_PT_VECTOR_WIDTH+ETM_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 type tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_TBPT_VECTOR_WIDTH-1 downto 0);
