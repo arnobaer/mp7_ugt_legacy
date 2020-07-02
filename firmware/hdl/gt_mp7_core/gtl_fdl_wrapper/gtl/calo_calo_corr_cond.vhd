@@ -143,13 +143,14 @@ architecture rtl of calo_calo_corr_cond is
     
 begin
 
-    same_obj <= true when obj_type_calo1 = obj_type_calo2 else false;
-    same_range <= true when (calo1_object_low = calo2_object_low) and (calo1_object_high = calo2_object_high) else false;
+--     same_obj <= true when obj_type_calo1 = obj_type_calo2 else false;
+--     same_range <= true when (calo1_object_low = calo2_object_low) and (calo1_object_high = calo2_object_high) else false;
     
     -- Comparison with limits.
     cuts_l_1: for i in calo1_object_low to calo1_object_high generate 
         cuts_l_2: for j in calo2_object_low to calo2_object_high generate
-            same_i: if (same_obj and same_bx and same_range) and j>i generate
+--             same_i: if (same_obj and same_bx and same_range) and j>i generate
+            same_i: if ((obj_type_calo1 = obj_type_calo2) and same_bx and ((calo1_object_low = calo2_object_low) and (calo1_object_high = calo2_object_high))) and j>i generate
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
@@ -178,7 +179,8 @@ begin
                 tbpt_comp(i,j) <= tbpt_comp_t(i,j);
                 tbpt_comp(j,i) <= tbpt_comp_t(i,j);                
             end generate same_i;
-            differ_i: if not (same_obj and same_bx and same_range) generate
+--             differ_i: if not (same_obj and same_bx and same_range) generate
+            differ_i: if not ((obj_type_calo1 = obj_type_calo2) and same_bx and ((calo1_object_low = calo2_object_low) and (calo1_object_high = calo2_object_high))) generate
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
@@ -188,7 +190,7 @@ begin
                         mass_width, mass_div_dr_width, tbpt_width
                     )
                     port map(
-                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_trv(i,j), mass_div_dr(i,j),
+                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
                         deta_comp(i,j), dphi_comp(i,j), dr_comp(i,j), mass_inv_comp(i,j), mass_trv_comp(i,j),
                         mass_div_dr_comp_pipe(i,j), tbpt_comp(i,j)
                     );
