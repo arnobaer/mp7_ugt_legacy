@@ -56,6 +56,7 @@ src gt_mp7_core/gtl_fdl_wrapper/gtl/dr_calculator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r_calc.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/min_bias_hf_conditions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/towercount_condition.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/tbpt_calc.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/twobody_pt_calculator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/twobody_pt.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/mass_calculator.vhd
