@@ -80,9 +80,9 @@ entity calo_esums_correlation_condition is
         lhc_clk: in std_logic;
         calo_data_i: in calo_objects_array;
         esums_data_i: in std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        dphi : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to 0) := (others => (others => (others => '0')));
-        mass_trv : in mass_vector_array(0 to nr_obj_calo1-1, 0 to 0) := (others => (others => (others => '0')));
-        tbpt : in tbpt_vector_array(0 to nr_obj_calo1-1, 0 to 0) := (others => (others => (others => '0')));
+        dphi : in deta_dphi_vector_array(0 to nr_obj_calo-1, 0 to 0) := (others => (others => (others => '0')));
+        mass_trv : in mass_vector_array(0 to nr_obj_calo-1, 0 to 0) := (others => (others => (others => '0')));
+        tbpt : in tbpt_vector_array(0 to nr_obj_calo-1, 0 to 0) := (others => (others => (others => '0')));
         condition_o: out std_logic
     );
 end calo_esums_correlation_condition;
@@ -98,11 +98,11 @@ architecture rtl of calo_esums_correlation_condition is
     signal obj_vs_templ : object_vs_template_array;
     signal obj_vs_templ_pipe : object_vs_template_array;
 
-    signal dphi_comp, dphi_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to 0) :=
+    signal dphi_comp, dphi_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo-1, 0 to 0) :=
     (others => (others => '1'));
-    signal mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to 0) :=
+    signal mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo-1, 0 to 0) :=
     (others => (others => '1'));
-    signal tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to 0) :=
+    signal tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo-1, 0 to 0) :=
     (others => (others => '1'));
 
     signal esums_comp_o, esums_comp_o_pipe : std_logic;
