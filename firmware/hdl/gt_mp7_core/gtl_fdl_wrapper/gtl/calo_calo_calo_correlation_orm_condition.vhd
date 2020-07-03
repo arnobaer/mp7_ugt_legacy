@@ -36,8 +36,7 @@ entity calo_calo_calo_correlation_orm_condition is
         mass_type : natural;
         twobody_pt_cut: boolean;
 
-        nr_obj_calo1 : natural;
-        
+        nr_obj_calo1 : natural;       
         calo1_object_low: natural;
         calo1_object_high: natural;
         et_ge_mode_calo1: boolean;
@@ -62,8 +61,7 @@ entity calo_calo_calo_correlation_orm_condition is
         phi_w2_lower_limit_calo1: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
         iso_lut_calo1: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0);
 
-        nr_obj_calo3 : natural;
-        
+        nr_obj_calo3 : natural;        
         calo3_object_low: natural;
         calo3_object_high: natural;
         et_ge_mode_calo3: boolean;
@@ -114,6 +112,7 @@ entity calo_calo_calo_correlation_orm_condition is
         mass_width: positive := 56;
         tbpt_width: positive := 50;
 
+        nr_obj_calo2 : natural := 11;        
         calo2_object_low: natural := 0;
         calo2_object_high: natural := 11;
         et_ge_mode_calo2: boolean := true;
@@ -136,13 +135,13 @@ entity calo_calo_calo_correlation_orm_condition is
         phi_w2_ignore_calo2: boolean := true;
         phi_w2_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0')
 
     );
     port(
         lhc_clk: in std_logic;
         calo1: in calo_objects_array;
-        calo2: in calo_objects_array := (others => (others => (others => '0')));
+        calo2: in calo_objects_array(0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
         calo3: in calo_objects_array;
         deta_orm : in deta_dphi_vector_array(0 to nr_obj_calo-1, 0 to nr_obj_calo3-1) := (others => (others => (others => '0')));
         dphi_orm : in deta_dphi_vector_array(0 to nr_obj_calo-1, 0 to nr_obj_calo3-1) := (others => (others => (others => '0')));
