@@ -38,7 +38,6 @@ architecture rtl of tbpt_calc is
     constant PT_SQ_VECTOR_WIDTH : positive := 2+pt1_width+pt2_width+sin_cos_width+sin_cos_width;
     signal pt1_square : std_logic_vector(PT_SQ_VECTOR_WIDTH-1 downto 0);
     signal pt2_square : std_logic_vector(PT_SQ_VECTOR_WIDTH-1 downto 0);
-    signal pt_square : std_logic_vector(PT_SQ_VECTOR_WIDTH-1 downto 0);
 
     signal cos_plus_sin_integer : integer;
     signal cos_plus_sin_vec_temp : std_logic_vector(sin_cos_width+sin_cos_width-1 downto 0);
@@ -51,7 +50,7 @@ architecture rtl of tbpt_calc is
     attribute use_dsp : string;
     attribute use_dsp of cos_plus_sin_integer : signal is "yes";
     attribute use_dsp of pt1_x_pt2_x_cos_plus_sin_temp : signal is "yes";
---     attribute use_dsp of pt_square : signal is "yes";
+    attribute use_dsp of pt_square : signal is "yes";
 
 begin
 
