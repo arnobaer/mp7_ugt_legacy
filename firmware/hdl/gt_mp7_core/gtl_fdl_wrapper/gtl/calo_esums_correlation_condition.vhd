@@ -30,6 +30,7 @@ entity calo_esums_correlation_condition is
         mass_cut: boolean;
         twobody_pt_cut: boolean;
 
+        nr_obj_calo : natural;
         calo_object_low: natural;
         calo_object_high: natural;
         et_ge_mode_calo: boolean;
