@@ -86,6 +86,7 @@ entity muon_esums_correlation_condition is
         esums_data_i: in std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
         dphi : in deta_dphi_vector_array(0 to NR_MU_OBJECTS-1, 0 to 0) := (others => (others => (others => '0')));
         mass_trv : in mass_vector_array(0 to NR_MU_OBJECTS-1, 0 to 0) := (others => (others => (others => '0')));
+        tbpt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to 0) := (others => (others => (others => '0')));
         condition_o: out std_logic
     );
 end muon_esums_correlation_condition;
