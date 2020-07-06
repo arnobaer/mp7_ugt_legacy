@@ -780,7 +780,8 @@ constant TAU_EG_SIN_COS_PRECISION : positive := 3;
 constant TAU_JET_SIN_COS_PRECISION : positive := 3;
 constant TAU_TAU_SIN_COS_PRECISION : positive := 3;
 
-constant CALO_SIN_COS_VECTOR_WIDTH: positive := log2c(1000-(-1000));
+-- constant CALO_SIN_COS_VECTOR_WIDTH: positive := log2c(1000-(-1000));
+constant CALO_SIN_COS_VECTOR_WIDTH: positive := 11;
 type calo_sin_cos_vector_array is array (natural range <>) of std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
 type calo_sin_cos_integer_array is array (natural range <>) of integer;
 
@@ -1041,7 +1042,7 @@ constant MU_ETM_TBPT_VECTOR_WIDTH : positive := 2+MU_PT_VECTOR_WIDTH+ETM_PT_VECT
 constant MU_HTM_TBPT_VECTOR_WIDTH : positive := 2+MU_PT_VECTOR_WIDTH+HTM_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
 constant MU_ETMHF_TBPT_VECTOR_WIDTH : positive := 2+MU_PT_VECTOR_WIDTH+ETMHF_PT_VECTOR_WIDTH+2*CALO_SIN_COS_VECTOR_WIDTH;
 
-constant MAX_TBPT_VECTOR_WIDTH : positive := 2+JET_PT_VECTOR_WIDTH+ETM_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
+constant MAX_TBPT_VECTOR_WIDTH : positive := 2+2*JET_PT_VECTOR_WIDTH+2*ETM_PT_VECTOR_WIDTH+2*MUON_SIN_COS_VECTOR_WIDTH;
 type tbpt_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_TBPT_VECTOR_WIDTH-1 downto 0);
 
 -- ********************************************************
