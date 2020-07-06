@@ -3,6 +3,7 @@
 -- Calculation of "twobody_pt" (pt**2) based on LUTs.
 
 -- Version history:
+-- HB 2020-07-06: added internal pt1 and pt2 (slices)
 -- HB 2020-07-03: first design
 
 library ieee;
@@ -21,8 +22,8 @@ entity tbpt_calc is
         PT_SQ_SIN_COS_PRECISION : positive := 3
     );
     port(
-        pt1 : in std_logic_vector(pt1_width-1 downto 0);
-        pt2 : in std_logic_vector(pt2_width-1 downto 0);
+        pt1 : in std_logic_vector(MAX_DIFF_BITS-1 downto 0);
+        pt2 : in std_logic_vector(MAX_DIFF_BITS-1 downto 0);
         cos_phi_1_integer : in integer;
         cos_phi_2_integer : in integer;
         sin_phi_1_integer : in integer;
@@ -33,7 +34,10 @@ end tbpt_calc;
 
 architecture rtl of tbpt_calc is
 
--- HB 2017-03-23: calculation of twobody_pt with formular => pt**2 = pt1**2+pt2**2+2*pt1*pt2*(cos(phi1)*cos(phi2)+sin(phi1)*sin(phi2))
+    signal pt1_int : std_logic_vector(pt1_width-1 downto 0);
+    signal pt2_int : std_logic_vector(pt2_width-1 downto 0);
+
+    -- HB 2017-03-23: calculation of twobody_pt with formular => pt**2 = pt1**2+pt2**2+2*pt1*pt2*(cos(phi1)*cos(phi2)+sin(phi1)*sin(phi2))
 -- PT_SQ_VECTOR_WIDTH based on formular for pt**2 [2+... because of ...+2*pt1*pt2*(cos(phi1)*cos(phi2)+sin(phi1)*sin(phi2))]
     constant PT_SQ_VECTOR_WIDTH : positive := 2+pt1_width+pt2_width+sin_cos_width+sin_cos_width;
     signal pt1_square : std_logic_vector(PT_SQ_VECTOR_WIDTH-1 downto 0);
@@ -59,8 +63,8 @@ begin
 --               conversion cos_plus_sin_integer to cos_plus_sin_vec, depending on pos. or neg. value of cos_plus_sin_integer
 --               pt_square = pt1**2+pt2**2+2*pt1*pt2*cos_plus_sin_vec
 
-    pt1_square <= pt1 * pt1 * conv_std_logic_vector(10**(PT_SQ_SIN_COS_PRECISION*2), PT_SQ_VECTOR_WIDTH-pt1_width*2);
-    pt2_square <= pt2 * pt2 * conv_std_logic_vector(10**(PT_SQ_SIN_COS_PRECISION*2), PT_SQ_VECTOR_WIDTH-pt2_width*2);
+    pt1_square <= pt1_int * pt1_int * conv_std_logic_vector(10**(PT_SQ_SIN_COS_PRECISION*2), PT_SQ_VECTOR_WIDTH-pt1_width*2);
+    pt2_square <= pt2_int * pt2_int * conv_std_logic_vector(10**(PT_SQ_SIN_COS_PRECISION*2), PT_SQ_VECTOR_WIDTH-pt2_width*2);
 
     cos_plus_sin_integer <= cos_phi_1_integer * cos_phi_2_integer + sin_phi_1_integer * sin_phi_2_integer;
 
@@ -69,7 +73,7 @@ begin
 -- HB 2017-03-22: use two's complement when cos_plus_sin_vec_temp is negative
     cos_plus_sin_vec <= cos_plus_sin_vec_temp when cos_plus_sin_vec_temp(cos_plus_sin_vec_temp'high) = '0' else (not(cos_plus_sin_vec_temp)+1);
 
-    pt1_x_pt2_x_cos_plus_sin_temp <= conv_std_logic_vector(2,2) * pt1 * pt2 * cos_plus_sin_vec;
+    pt1_x_pt2_x_cos_plus_sin_temp <= conv_std_logic_vector(2,2) * pt1_int * pt2_int * cos_plus_sin_vec;
 -- HB 2017-03-22: use two's complement for pt1_x_pt2_x_cos_plus_sin when cos_plus_sin_vec_temp is negative
     pt1_x_pt2_x_cos_plus_sin <= pt1_x_pt2_x_cos_plus_sin_temp when cos_plus_sin_vec_temp(cos_plus_sin_vec_temp'high) = '0' else (not(pt1_x_pt2_x_cos_plus_sin_temp)+1);
 
