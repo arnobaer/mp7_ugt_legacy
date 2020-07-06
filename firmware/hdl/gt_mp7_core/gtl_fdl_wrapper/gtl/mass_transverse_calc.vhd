@@ -24,7 +24,7 @@ entity mass_transverse_calc is
         pt1 : in std_logic_vector(pt1_width-1 downto 0);
         pt2 : in std_logic_vector(pt2_width-1 downto 0);
         cos_dphi : in std_logic_vector(cosh_cos_width-1 downto 0);
-        transverse_mass_sq_div2 : out std_logic_vector(pt1_width+pt2_width+cosh_cos_width-1 downto 0)
+        transverse_mass_sq_div2 : out std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0) := (others => '0')
     );
 end mass_transverse_calc;
 
@@ -40,6 +40,6 @@ begin
 
 -- HB 2016-12-12: calculation of transverse mass with formular M**2/2=pt1*pt2*(1-cos(phi1-phi2))
 --                "conv_std_logic_vector((10**mass_cosh_cos_precision), cosh_cos_width)" means 1 multiplied with 10**mass_cosh_cos_precision, converted to std_logic_vector with cosh_cos_width
-    transverse_mass_sq_div2 <= pt1 * pt2 * ((conv_std_logic_vector((10**mass_cosh_cos_precision), cosh_cos_width)) - cos_dphi);
+    transverse_mass_sq_div2(MASS_VECTOR_WIDTH-1 downto 0) <= pt1 * pt2 * ((conv_std_logic_vector((10**mass_cosh_cos_precision), cosh_cos_width)) - cos_dphi);
     
 end architecture rtl;
