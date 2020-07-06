@@ -149,7 +149,6 @@ begin
             end if;
         end if;
     end process;
-    -- *** section: CUTs - end ***************************************************************************************
 
     -- Instance of comparators for calorimeter objects.
     obj_templ1_l: for i in calo_object_low to calo_object_high generate
