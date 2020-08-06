@@ -199,7 +199,7 @@ begin
                         dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
                     )
                     port map(
-                        deta => deta_13(i,k), dphi => dphi_13(i,k), dr => dr_13(i,k), 
+                        deta => deta_orm(i,k), dphi => dphi_orm(i,k), dr => dr_orm(i,k), 
                         deta_comp => deta_orm_comp_13(i,k), dphi_comp => dphi_orm_comp_13(i,k), dr_comp => dr_orm_comp_13(i,k)
                     );
         end generate cuts_orm_13_l_2;
@@ -217,7 +217,7 @@ begin
                         dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
                     )
                     port map(
-                        deta => deta_13(i,k), dphi => dphi_13(i,k), dr => dr_13(i,k), 
+                        deta => deta_orm(i,k), dphi => dphi_orm(i,k), dr => dr_orm(i,k), 
                         deta_comp => deta_orm_comp_23(i,k), dphi_comp => dphi_orm_comp_23(i,k), dr_comp => dr_orm_comp_23(i,k)
                     );
             end generate cuts_orm_23_l_2;
