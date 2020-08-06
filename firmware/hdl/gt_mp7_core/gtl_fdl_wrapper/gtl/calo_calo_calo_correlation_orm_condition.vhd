@@ -194,9 +194,9 @@ begin
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut => deta_orm_cut, dphi_cut => dphi_orm_cut, dr_cut => dr_orm_cut,
-                        deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_lower_limit, 
-                        dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
-                        dr_upper_limit => dr_upper_limit, dr_lower_limit => dr_lower_limit
+                        deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_orm_lower_limit, 
+                        dphi_upper_limit => dphi_orm_upper_limit, dphi_lower_limit => dphi_orm_lower_limit,
+                        dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
                     )
                     port map(
                         deta => deta_13(i,k), dphi => dphi_13(i,k), dr => dr_13(i,k), 
@@ -212,9 +212,9 @@ begin
                 comp_i: entity work.cuts_comp
                     generic map(
                         deta_cut => deta_orm_cut, dphi_cut => dphi_orm_cut, dr_cut => dr_orm_cut,
-                        deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_lower_limit, 
-                        dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
-                        dr_upper_limit => dr_upper_limit, dr_lower_limit => dr_lower_limit
+                        deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_orm_lower_limit, 
+                        dphi_upper_limit => dphi_orm_upper_limit, dphi_lower_limit => dphi_orm_lower_limit,
+                        dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
                     )
                     port map(
                         deta => deta_13(i,k), dphi => dphi_13(i,k), dr => dr_13(i,k), 
