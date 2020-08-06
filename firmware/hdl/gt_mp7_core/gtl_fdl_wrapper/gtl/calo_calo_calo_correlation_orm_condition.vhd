@@ -171,12 +171,12 @@ architecture rtl of calo_calo_calo_correlation_orm_condition is
     constant obj_vs_templ_pipeline_stage: boolean := true; -- pipeline stage for obj_vs_templ (intermediate flip-flop)
     constant conditions_pipeline_stage: boolean := true; -- pipeline stage for condition output 
 
-    signal deta_orm_comp_13, deta_orm_comp_13_pipe : std_logic_2dim_array(calo1_object_low to calo1_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
-    signal deta_orm_comp_23, deta_orm_comp_23_pipe : std_logic_2dim_array(calo2_object_low to calo2_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
-    signal dphi_orm_comp_13, dphi_orm_comp_13_pipe : std_logic_2dim_array(calo1_object_low to calo1_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
-    signal dphi_orm_comp_23, dphi_orm_comp_23_pipe : std_logic_2dim_array(calo2_object_low to calo2_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
-    signal dr_orm_comp_13, dr_orm_comp_13_pipe : std_logic_2dim_array(calo1_object_low to calo1_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
-    signal dr_orm_comp_23, dr_orm_comp_23_pipe : std_logic_2dim_array(calo2_object_low to calo2_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
+    signal deta_orm_comp_13, deta_orm_comp_13_pipe, deta_orm_comp_13_t : std_logic_2dim_array(calo1_object_low to calo1_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
+    signal deta_orm_comp_23, deta_orm_comp_23_pipe, deta_orm_comp_23_t : std_logic_2dim_array(calo2_object_low to calo2_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
+    signal dphi_orm_comp_13, dphi_orm_comp_13_pipe, dphi_orm_comp_13_t : std_logic_2dim_array(calo1_object_low to calo1_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
+    signal dphi_orm_comp_23, dphi_orm_comp_23_pipe, dphi_orm_comp_23_t : std_logic_2dim_array(calo2_object_low to calo2_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
+    signal dr_orm_comp_13, dr_orm_comp_13_pipe, dr_orm_comp_13_t : std_logic_2dim_array(calo1_object_low to calo1_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
+    signal dr_orm_comp_23, dr_orm_comp_23_pipe, dr_orm_comp_23_t : std_logic_2dim_array(calo2_object_low to calo2_object_high, calo3_object_low to calo3_object_high) := (others => (others => '0'));
     signal calo1_obj_vs_templ, calo1_obj_vs_templ_pipe : std_logic_2dim_array(calo1_object_low to calo1_object_high, 1 to 1) := (others => (others => '0'));
     signal calo2_obj_vs_templ, calo2_obj_vs_templ_pipe : std_logic_2dim_array(calo2_object_low to calo2_object_high, 1 to 1) := (others => (others => '0'));
     signal calo3_obj_vs_templ, calo3_obj_vs_templ_pipe : std_logic_2dim_array(calo3_object_low to calo3_object_high, 1 to 1) := (others => (others => '0'));
@@ -191,17 +191,35 @@ begin
 
     cuts_orm_13_l_1: for i in calo1_object_low to calo1_object_high generate 
         cuts_orm_13_l_2: for k in calo3_object_low to calo3_object_high generate
-                comp_i: entity work.cuts_comp
-                    generic map(
-                        deta_cut => deta_orm_cut, dphi_cut => dphi_orm_cut, dr_cut => dr_orm_cut,
-                        deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_orm_lower_limit, 
-                        dphi_upper_limit => dphi_orm_upper_limit, dphi_lower_limit => dphi_orm_lower_limit,
-                        dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
-                    )
-                    port map(
-                        deta => deta_orm(i,k), dphi => dphi_orm(i,k), dr => dr_orm(i,k), 
-                        deta_comp => deta_orm_comp_13(i,k), dphi_comp => dphi_orm_comp_13(i,k), dr_comp => dr_orm_comp_13(i,k)
-                    );
+            comp_i: entity work.cuts_comp
+                generic map(
+                    deta_cut => deta_orm_cut, dphi_cut => dphi_orm_cut, dr_cut => dr_orm_cut,
+                    deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_orm_lower_limit, 
+                    dphi_upper_limit => dphi_orm_upper_limit, dphi_lower_limit => dphi_orm_lower_limit,
+                    dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
+                )
+                port map(
+                    deta => deta_orm(i,k), dphi => dphi_orm(i,k), dr => dr_orm(i,k), 
+                    deta_comp => deta_orm_comp_13_t(i,k), dphi_comp => dphi_orm_comp_13_t(i,k), dr_comp => dr_orm_comp_13_t(i,k)
+                );
+            orm_cuts_sel_p: process(deta_orm_comp_13_t, dphi_orm_comp_13_t, dr_orm_comp_13_t)
+                begin
+                if deta_orm_cut then 
+                    deta_orm_comp_13(i,k) <= deta_orm_comp_13_t(i,k);
+                else
+                    deta_orm_comp_13(i,k) <= '0';
+                end if;
+                if dphi_orm_cut then 
+                    dphi_orm_comp_13(i,k) <= dphi_orm_comp_13_t(i,k);
+                else
+                    dphi_orm_comp_13(i,k) <= '0';
+                end if;
+                if dr_orm_cut then 
+                    dr_orm_comp_13(i,k) <= dr_orm_comp_13_t(i,k);
+                else
+                    dr_orm_comp_13(i,k) <= '0';
+                end if;
+            end process;
         end generate cuts_orm_13_l_2;
     end generate cuts_orm_13_l_1;
 
@@ -218,8 +236,26 @@ begin
                     )
                     port map(
                         deta => deta_orm(i,k), dphi => dphi_orm(i,k), dr => dr_orm(i,k), 
-                        deta_comp => deta_orm_comp_23(i,k), dphi_comp => dphi_orm_comp_23(i,k), dr_comp => dr_orm_comp_23(i,k)
+                        deta_comp => deta_orm_comp_23_t(i,k), dphi_comp => dphi_orm_comp_23_t(i,k), dr_comp => dr_orm_comp_23_t(i,k)
                     );
+                orm_cuts_sel_p: process(deta_orm_comp_23_t, dphi_orm_comp_23_t, dr_orm_comp_23_t)
+                    begin
+                    if deta_orm_cut then 
+                        deta_orm_comp_23(i,k) <= deta_orm_comp_23_t(i,k);
+                    else
+                        deta_orm_comp_23(i,k) <= '0';
+                    end if;
+                    if dphi_orm_cut then 
+                        dphi_orm_comp_23(i,k) <= dphi_orm_comp_23_t(i,k);
+                    else
+                        dphi_orm_comp_23(i,k) <= '0';
+                    end if;
+                    if dr_orm_cut then 
+                        dr_orm_comp_23(i,k) <= dr_orm_comp_23_t(i,k);
+                    else
+                        dr_orm_comp_23(i,k) <= '0';
+                    end if;
+                end process;
             end generate cuts_orm_23_l_2;
         end generate cuts_orm_23_l_1;
     end generate cuts_orm_2plus1_true_i;
