@@ -3,6 +3,7 @@
 -- Collection of cuts comparators for correlations
 
 -- Version history:
+-- HB 2020-08-07: inserted invariant mass for unconstraint pt.
 -- HB 2020-06-03: first design.
 
 library ieee;
@@ -48,6 +49,7 @@ entity cuts_comp is
         dphi: in std_logic_vector(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0) := (others => '0');
         dr: in std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0) := (others => '0');
         mass_inv: in std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0) := (others => '0');
+        mass_inv_upt: in std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0) := (others => '0');
         mass_trv: in std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0) := (others => '0');
         mass_div_dr: in std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
         tbpt: in std_logic_vector(MAX_TBPT_VECTOR_WIDTH-1 downto 0) := (others => '0');
@@ -55,6 +57,7 @@ entity cuts_comp is
         dphi_comp: out std_logic := '1';
         dr_comp: out std_logic := '1';
         mass_inv_comp: out std_logic := '1';
+        mass_inv_upt_comp: out std_logic := '1';
         mass_trv_comp: out std_logic := '1';
         mass_div_dr_comp: out std_logic := '1';
         twobody_pt_comp: out std_logic := '1'
@@ -109,6 +112,10 @@ begin
                 -- MASS INV
                 mass_inv_i: if mass_cut = true and mass_type = INVARIANT_MASS_TYPE generate
                     mass_inv_comp <= '1' when mass_inv(mass_width-1 downto 0) >= mass_lower_limit_t and mass_inv(mass_width-1 downto 0) <= mass_upper_limit_t else '0';
+                end generate mass_inv_i;
+                -- MASS INV UPT
+                mass_inv_i: if mass_cut = true and mass_type = INVARIANT_MASS_UPT_TYPE generate
+                    mass_inv_upt_comp <= '1' when mass_inv_upt(mass_width-1 downto 0) >= mass_lower_limit_t and mass_inv_upt(mass_width-1 downto 0) <= mass_upper_limit_t else '0';
                 end generate mass_inv_i;
                 -- MASS TRV
                 mass_trv_i: if mass_cut = true and mass_type = TRANSVERSE_MASS_TYPE generate

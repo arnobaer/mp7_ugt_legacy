@@ -3,6 +3,7 @@
 -- Correlation Condition module for muon objects.
 
 -- Version history:
+-- HB 2020-08-07: inserted invariant mass for unconstraint pt.
 -- HB 2020-07-02: changed for new cuts structure (calculation outside of conditions).
 -- HB 2020-06-09: implemented new muon structure with "unconstraint pt" and "impact parameter".
 -- HB 2020-06-04: updated process cuts_pipeline_p.
@@ -131,6 +132,7 @@ entity muon_muon_correlation_condition is
         dphi : in deta_dphi_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         dr : in delta_r_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         mass_inv : in mass_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
+        mass_inv_upt : in mass_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         mass_trv : in mass_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         mass_div_dr : in mass_div_dr_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         tbpt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
@@ -163,6 +165,8 @@ architecture rtl of muon_muon_correlation_condition is
     (others => (others => '1'));
     signal mass_inv_comp_t, mass_inv_comp, mass_inv_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
     (others => (others => '1'));
+    signal mass_inv_upt_comp_t, mass_inv_upt_comp, mass_inv_upt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    (others => (others => '1'));
     signal mass_trv_comp_t, mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
     (others => (others => '1'));
     signal mass_div_dr_comp_t, mass_div_dr_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
@@ -187,8 +191,8 @@ begin
                         MU_MU_MASS_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
                     )
                     port map(
-                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
-                        deta_comp_t(i,j), dphi_comp_t(i,j), dr_comp_t(i,j), mass_inv_comp_t(i,j), mass_trv_comp_t(i,j),
+                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_inv_upt(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
+                        deta_comp_t(i,j), dphi_comp_t(i,j), dr_comp_t(i,j), mass_inv_comp_t(i,j), mass_inv_upt_comp_t(i,j), mass_trv_comp_t(i,j),
                         mass_div_dr_comp_t(i,j), tbpt_comp_t(i,j)
                     );
                 deta_comp(i,j) <= deta_comp_t(i,j);
@@ -199,6 +203,8 @@ begin
                 dr_comp(j,i) <= dr_comp_t(i,j);
                 mass_inv_comp(i,j) <= mass_inv_comp_t(i,j);
                 mass_inv_comp(j,i) <= mass_inv_comp_t(i,j);
+                mass_inv_upt_comp(i,j) <= mass_inv_upt_comp_t(i,j);
+                mass_inv_upt_comp(j,i) <= mass_inv_upt_comp_t(i,j);
                 mass_trv_comp(i,j) <= mass_trv_comp_t(i,j);
                 mass_trv_comp(j,i) <= mass_trv_comp_t(i,j);                
                 mass_div_dr_comp_pipe(i,j) <= mass_div_dr_comp_t(i,j);
@@ -216,9 +222,9 @@ begin
                         MU_MU_MASS_VECTOR_WIDTH, MU_MU_MASS_DIV_DR_VECTOR_WIDTH, MU_MU_TBPT_VECTOR_WIDTH
                     )
                     port map(
-                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
-                        deta_comp(i,j), dphi_comp(i,j), dr_comp(i,j), mass_inv_comp(i,j), mass_trv_comp(i,j),
-                        mass_div_dr_comp_pipe(i,j), tbpt_comp(i,j)
+                        deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_inv_upt(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j),
+                        deta_comp_t(i,j), dphi_comp_t(i,j), dr_comp_t(i,j), mass_inv_comp_t(i,j), mass_inv_upt_comp_t(i,j), mass_trv_comp_t(i,j),
+                        mass_div_dr_comp_t(i,j), tbpt_comp_t(i,j)
                     );
             end generate not_same_i;
         end generate cuts_l_2;
