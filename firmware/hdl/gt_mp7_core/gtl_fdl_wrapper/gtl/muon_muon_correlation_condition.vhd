@@ -256,15 +256,26 @@ begin
     -- Pipeline stage for charge correlation comparison
     cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_trv_comp, tbpt_comp, charge_comp_double)
         begin
-        if (lhc_clk'event and lhc_clk = '1') then
+        if obj_vs_templ_pipeline_stage = false then 
             deta_comp_pipe <= deta_comp;
             dphi_comp_pipe <= dphi_comp;
             dr_comp_pipe <= dr_comp;
             mass_inv_comp_pipe <= mass_inv_comp;
+            mass_inv_upt_comp_pipe <= mass_inv_upt_comp;
             mass_trv_comp_pipe <= mass_trv_comp;
--- mass_div_dr_comp_pipe: 1 bx pipeline done with ROMs for LUTs of inv_dr_sq values in mass_div_dr_comp.vhd
             tbpt_comp_pipe <= tbpt_comp;
             charge_comp_double_pipe <= charge_comp_double;
+        else
+            if (lhc_clk'event and lhc_clk = '1') then
+                deta_comp_pipe <= deta_comp;
+                dphi_comp_pipe <= dphi_comp;
+                dr_comp_pipe <= dr_comp;
+                mass_inv_comp_pipe <= mass_inv_comp;
+                mass_inv_upt_comp_pipe <= mass_inv_upt_comp;
+                mass_trv_comp_pipe <= mass_trv_comp;
+                tbpt_comp_pipe <= tbpt_comp;
+                charge_comp_double_pipe <= charge_comp_double;
+            end if;
         end if;
     end process;
     
@@ -337,9 +348,14 @@ begin
     -- Pipeline stage for obj_vs_templ
     obj_vs_templ_pipeline_p: process(lhc_clk, muon1_obj_vs_templ, muon2_obj_vs_templ)
         begin
-        if (lhc_clk'event and lhc_clk = '1') then
+        if obj_vs_templ_pipeline_stage = false then 
             muon1_obj_vs_templ_pipe <= muon1_obj_vs_templ;
             muon2_obj_vs_templ_pipe <= muon2_obj_vs_templ;
+        else
+            if (lhc_clk'event and lhc_clk = '1') then
+                muon1_obj_vs_templ_pipe <= muon1_obj_vs_templ;
+                muon2_obj_vs_templ_pipe <= muon2_obj_vs_templ;
+            end if;
         end if;
     end process;
 
