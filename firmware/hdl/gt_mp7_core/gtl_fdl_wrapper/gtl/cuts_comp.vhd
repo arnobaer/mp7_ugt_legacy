@@ -122,9 +122,9 @@ begin
                     mass_inv_comp <= '1' when mass_inv(mass_width-1 downto 0) >= mass_lower_limit_t and mass_inv(mass_width-1 downto 0) <= mass_upper_limit_t else '0';
                 end generate mass_inv_i;
                 -- MASS INV UPT
-                mass_inv_i: if mass_cut = true and mass_type = INVARIANT_MASS_UPT_TYPE generate
+                mass_inv_upt_i: if mass_cut = true and mass_type = INVARIANT_MASS_UPT_TYPE generate
                     mass_inv_upt_comp <= '1' when mass_inv_upt(mass_width-1 downto 0) >= mass_lower_limit_t and mass_inv_upt(mass_width-1 downto 0) <= mass_upper_limit_t else '0';
-                end generate mass_inv_i;
+                end generate mass_inv_upt_i;
                 -- MASS TRV
                 mass_trv_i: if mass_cut = true and mass_type = TRANSVERSE_MASS_TYPE generate
                     mass_trv_comp <= '1' when mass_trv(mass_width-1 downto 0) >= mass_lower_limit_t and mass_trv(mass_width-1 downto 0) <= mass_upper_limit_t else '0';
