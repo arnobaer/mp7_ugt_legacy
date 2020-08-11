@@ -265,15 +265,15 @@ begin
             cuts_l_2: for j in calo2_object_low to calo2_object_high generate
                 comp_i: entity work.cuts_comp
                     generic map(
-                        deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
-                        deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
-                        dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
-                        tbpt_threshold => tbpt_threshold,
-                        tbpt_width => tbpt_width
+                        deta_cut => deta_cut, dphi_cut => dphi_cut, dr_cut => dr_cut, mass_cut => mass_cut, mass_type => mass_type, twobody_pt_cut => twobody_pt_cut,
+                        deta_upper_limit => deta_upper_limit, deta_lower_limit => deta_lower_limit, dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
+                        dr_upper_limit => dr_upper_limit, dr_lower_limit => dr_lower_limit, mass_upper_limit => mass_upper_limit, mass_lower_limit => mass_lower_limit,
+                        tbpt_threshold => tbpt_threshold, tbpt_width => tbpt_width
                     )
                     port map(
-                        deta_12(i,j), dphi_12(i,j), dr_12(i,j), mass_inv_12(i,j), tbpt => tbpt_12(i,j),
-                        deta_comp => deta_comp_12(i,j), dphi_comp => dphi_comp_12(i,j), dr_comp => dr_comp_12(i,j), mass_inv_comp => mass_comp_12(i,j), twobody_pt_comp => tbpt_comp_12(i,j)
+                        deta => deta_12(i,j), dphi => dphi_12(i,j), dr => dr_12(i,j), mass_inv => mass_inv_12(i,j), tbpt => tbpt_12(i,j),
+                        deta_comp => deta_comp_12(i,j), dphi_comp => dphi_comp_12(i,j), dr_comp => dr_comp_12(i,j), 
+                        mass_inv_comp => mass_comp_12(i,j), twobody_pt_comp => tbpt_comp_12(i,j)
                     );
             end generate cuts_l_2;
         end generate cuts_l_1;
@@ -284,14 +284,13 @@ begin
             cuts_l_2: for j in calo3_object_low to calo3_object_high generate
                 comp_i: entity work.cuts_comp
                     generic map(
-                        deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
-                        deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
-                        dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
-                        tbpt_threshold => tbpt_threshold,
-                        tbpt_width => tbpt_width
+                        deta_cut => deta_cut, dphi_cut => dphi_cut, dr_cut => dr_cut, mass_cut => mass_cut, mass_type => mass_type, twobody_pt_cut => twobody_pt_cut,
+                        deta_upper_limit => deta_upper_limit, deta_lower_limit => deta_lower_limit, dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
+                        dr_upper_limit => dr_upper_limit, dr_lower_limit => dr_lower_limit, mass_upper_limit => mass_upper_limit, mass_lower_limit => mass_lower_limit,
+                        tbpt_threshold => tbpt_threshold, tbpt_width => tbpt_width
                     )
                     port map(
-                        deta_13(i,j), dphi_13(i,j), dr_13(i,j), mass_inv_13(i,j), tbpt => tbpt_13(i,j),
+                        deta => deta_13(i,j), dphi => dphi_13(i,j), dr => dr_13(i,j), mass_inv => mass_inv_13(i,j), tbpt => tbpt_13(i,j),
                         deta_comp => deta_comp_13(i,j), dphi_comp => dphi_comp_13(i,j), dr_comp => dr_comp_13(i,j), mass_inv_comp => mass_comp_13(i,j), twobody_pt_comp => tbpt_comp_13(i,j)
                     );
             end generate cuts_l_2;
