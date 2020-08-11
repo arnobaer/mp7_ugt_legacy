@@ -129,7 +129,7 @@ begin
     twobody_pt_cut_i: if twobody_pt_cut = true and nr_templates = 2 generate
         cuts_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
             cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
-                same_i: if (same_bx = true) and j>i generate
+                cuts_comp_i: if j>i generate
                     comp_i: entity work.cuts_comp
                         generic map(
                             twobody_pt_cut => twobody_pt_cut, twobody_upt_cut => twobody_upt_cut,
@@ -143,18 +143,7 @@ begin
                     tbpt_comp(j,i) <= tbpt_comp_t(i,j);                
                     tbupt_comp(i,j) <= tbupt_comp_t(i,j);
                     tbupt_comp(j,i) <= tbupt_comp_t(i,j);                
-                end generate same_i;
-                not_same_i: if same_bx = false generate
-                    comp_i: entity work.cuts_comp
-                        generic map(
-                            twobody_pt_cut => twobody_pt_cut, twobody_upt_cut => twobody_upt_cut,
-                            tbpt_width => MU_MU_TBPT_VECTOR_WIDTH, tbupt_width => MU_MU_TBUPT_VECTOR_WIDTH
-                        )
-                        port map(
-                            tbpt => tbpt(i,j), tbupt => tbupt(i,j),
-                            tbpt_comp(i,j), tbupt_comp(i,j)
-                        );
-                end generate not_same_i;
+                end generate cuts_comp_i;
             end generate cuts_l_2;
         end generate cuts_l_1;
     end generate twobody_pt_cut_i;
