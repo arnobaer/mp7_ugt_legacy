@@ -140,6 +140,6 @@ begin
                 -- TWO BODY PT
                 tbupt_i: if twobody_upt_cut = true  generate
                     twobody_upt_comp <= '1' when tbupt(tbupt_width-1 downto 0) >= tbupt_threshold_t else '0';
-                end generate tbpt_i;
+                end generate tbupt_i;
     
 end architecture rtl;
