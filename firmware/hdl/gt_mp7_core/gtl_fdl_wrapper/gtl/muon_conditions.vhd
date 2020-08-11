@@ -149,13 +149,13 @@ begin
                         port map(
                             tbpt => tbpt(i,j), 
 --                             tbupt => tbupt(i,j),
-                            twobody_pt_comp_t(i,j)
---                             tbupt_comp_t(i,j)
+                            twobody_pt_comp => twobody_pt_comp_t(i,j)
+--                             twobody_upt_comp => twobody_upt_comp_t(i,j)
                         );
                     twobody_pt_comp(i,j) <= twobody_pt_comp_t(i,j);
                     twobody_pt_comp(j,i) <= twobody_pt_comp_t(i,j);                
---                     tbupt_comp(i,j) <= tbupt_comp_t(i,j);
---                     tbupt_comp(j,i) <= tbupt_comp_t(i,j);                
+--                     twobody_upt_comp(i,j) <= twobody_upt_comp_t(i,j);
+--                     twobody_upt_comp(j,i) <= twobody_upt_comp_t(i,j);                
                 end generate cuts_comp_i;
             end generate cuts_l_2;
         end generate cuts_l_1;
