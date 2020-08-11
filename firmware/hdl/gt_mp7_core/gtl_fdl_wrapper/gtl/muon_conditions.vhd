@@ -65,7 +65,7 @@ entity muon_conditions is
         ip_luts: muon_templates_ip_array;
         requested_charge_correlation: string(1 to 2);
         
-        twobody_pt_cut: boolean : false;
+        twobody_pt_cut: boolean := false;
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
         tbupt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
         
