@@ -113,8 +113,11 @@ architecture rtl of muon_conditions is
 
     signal condition_and_or : std_logic;
 
-    signal twobody_pt_comp, twobody_pt_comp_temp, twobody_pt_comp_pipe : 
-        std_logic_2dim_array(muon_object_slice_1_low to muon_object_slice_1_high, muon_object_slice_2_low to muon_object_slice_2_high) := (others => (others => '1'));
+    signal twobody_pt_comp, twobody_pt_comp_t, twobody_pt_comp_pipe : 
+        std_logic_2dim_array(0 to NR_MUON_OBJECTS, 0 to NR_MUON_OBJECTS) := (others => (others => '1'));
+
+--     signal twobody_upt_comp, twobody_upt_comp_t, twobody_upt_comp_pipe : 
+--         std_logic_2dim_array(0 to NR_MUON_OBJECTS, 0 to NR_MUON_OBJECTS) := (others => (others => '1'));
 
 begin
 
@@ -125,6 +128,12 @@ begin
         severity failure;        
     end generate check_tbpt_i;
     
+--     check_tbupt_i: if twobody_upt_cut generate
+--         assert (nr_templates = 2) report 
+--             "two-body unconstraint pt cut only for Double condition - nr_templates = " & integer'image(nr_templates) 
+--         severity failure;        
+--     end generate check_tbupt_i;
+    
     -- Comparison with limits for twobody pt and twobody unconstraint pt.
     twobody_pt_cut_i: if twobody_pt_cut = true and nr_templates = 2 generate
         cuts_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
@@ -132,17 +141,21 @@ begin
                 cuts_comp_i: if j>i generate
                     comp_i: entity work.cuts_comp
                         generic map(
-                            twobody_pt_cut => twobody_pt_cut, twobody_upt_cut => twobody_upt_cut,
-                            tbpt_width => MU_MU_TBPT_VECTOR_WIDTH, tbupt_width => MU_MU_TBUPT_VECTOR_WIDTH
+                            twobody_pt_cut => twobody_pt_cut, 
+--                             twobody_upt_cut => twobody_upt_cut,
+                            tbpt_width => MU_MU_TBPT_VECTOR_WIDTH 
+--                             tbupt_width => MU_MU_TBUPT_VECTOR_WIDTH
                         )
                         port map(
-                            tbpt => tbpt(i,j), tbupt => tbupt(i,j),
-                            tbpt_comp_t(i,j), tbupt_comp_t(i,j)
+                            tbpt => tbpt(i,j), 
+--                             tbupt => tbupt(i,j),
+                            twobody_pt_comp_t(i,j)
+--                             tbupt_comp_t(i,j)
                         );
-                    tbpt_comp(i,j) <= tbpt_comp_t(i,j);
-                    tbpt_comp(j,i) <= tbpt_comp_t(i,j);                
-                    tbupt_comp(i,j) <= tbupt_comp_t(i,j);
-                    tbupt_comp(j,i) <= tbupt_comp_t(i,j);                
+                    twobody_pt_comp(i,j) <= twobody_pt_comp_t(i,j);
+                    twobody_pt_comp(j,i) <= twobody_pt_comp_t(i,j);                
+--                     tbupt_comp(i,j) <= tbupt_comp_t(i,j);
+--                     tbupt_comp(j,i) <= tbupt_comp_t(i,j);                
                 end generate cuts_comp_i;
             end generate cuts_l_2;
         end generate cuts_l_1;
