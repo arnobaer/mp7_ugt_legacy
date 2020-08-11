@@ -115,26 +115,26 @@ architecture rtl of muon_esums_correlation_condition is
 begin
 
     cuts_l: for i in muon_object_low to muon_object_high generate
-                comp_i: entity work.cuts_comp
-                    generic map(
-                        dphi_cut => dphi_cut, 
-                        mass_cut => mass_cut, 
-                        mass_type => TRANSVERSE_MASS_TYPE, 
-                        twobody_pt_cut => twobody_pt_cut,
-                        dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
-                        mass_upper_limit => mass_upper_limit, mass_lower_limit => mass_lower_limit,
-                        tbpt_threshold => tbpt_threshold,
-                        mass_width => MU_MU_MASS_VECTOR_WIDTH, 
-                        tbpt_width => MU_MU_TBPT_VECTOR_WIDTH
-                    )
-                    port map(
-                        dphi => dphi(i,0), 
-                        mass_trv => mass_trv(i,0), 
-                        tbpt => tbpt(i,0),
-                        dphi_comp => dphi_comp(i,0), 
-                        mass_trv_comp => mass_trv_comp(i,0),
-                        twobody_pt_comp => tbpt_comp(i,0)
-                    );
+        comp_i: entity work.cuts_comp
+            generic map(
+                dphi_cut => dphi_cut, 
+                mass_cut => mass_cut, 
+                mass_type => TRANSVERSE_MASS_TYPE, 
+                twobody_pt_cut => twobody_pt_cut,
+                dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
+                mass_upper_limit => mass_upper_limit, mass_lower_limit => mass_lower_limit,
+                tbpt_threshold => tbpt_threshold,
+                mass_width => MU_MU_MASS_VECTOR_WIDTH, 
+                tbpt_width => MU_MU_TBPT_VECTOR_WIDTH
+            )
+            port map(
+                dphi => dphi(i,0), 
+                mass_trv => mass_trv(i,0), 
+                tbpt => tbpt(i,0),
+                dphi_comp => dphi_comp(i,0), 
+                mass_trv_comp => mass_trv_comp(i,0),
+                twobody_pt_comp => tbpt_comp(i,0)
+            );
     end generate cuts_l;
 
     -- Pipeline stage for cut comps
