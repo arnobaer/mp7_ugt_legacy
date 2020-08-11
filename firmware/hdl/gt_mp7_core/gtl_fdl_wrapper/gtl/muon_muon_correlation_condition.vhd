@@ -197,7 +197,7 @@ begin
                         mass_width => MU_MU_MASS_VECTOR_WIDTH, mass_div_dr_width => MU_MU_MASS_DIV_DR_VECTOR_WIDTH, tbpt_width => MU_MU_TBPT_VECTOR_WIDTH
                     )
                     port map(
-                        deta => deta(i,j), dphi => dphi(i,j), dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_trv => mass_trv(i,j),
+                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_trv => mass_trv(i,j),
                         mass_div_dr => mass_div_dr(i,j), tbpt => tbpt(i,j),
                         deta_comp => deta_comp_t(i,j), dphi_comp => dphi_comp_t(i,j), dr_comp => dr_comp_t(i,j), mass_inv_comp => mass_inv_comp_t(i,j), 
                         mass_inv_upt_comp => mass_inv_upt_comp_t(i,j), mass_div_dr_comp => mass_div_dr_comp_t(i,j), mass_trv_comp => mass_trv_comp_t(i,j), twobody_pt_comp => tbpt_comp_t(i,j)
@@ -231,7 +231,7 @@ begin
                         mass_width => MU_MU_MASS_VECTOR_WIDTH, mass_div_dr_width => MU_MU_MASS_DIV_DR_VECTOR_WIDTH, tbpt_width => MU_MU_TBPT_VECTOR_WIDTH
                     )
                     port map(
-                        deta => deta(i,j), dphi => dphi(i,j), dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_trv => mass_trv(i,j),
+                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_trv => mass_trv(i,j),
                         mass_div_dr => mass_div_dr(i,j), tbpt => tbpt(i,j),
                         deta_comp => deta_comp(i,j), dphi_comp => dphi_comp(i,j), dr_comp => dr_comp(i,j), mass_inv_comp => mass_inv_comp(i,j), 
                         mass_inv_upt_comp => mass_inv_upt_comp(i,j), mass_div_dr_comp => mass_div_dr_comp_pipe(i,j), mass_trv_comp => mass_trv_comp(i,j), twobody_pt_comp => tbpt_comp(i,j)
@@ -266,7 +266,7 @@ begin
     -- Pipeline stage for charge correlation comparison
     cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_inv_upt_comp, mass_trv_comp, tbpt_comp, tbupt_comp, charge_comp_double)
         begin
-        if obj_vs_templ_pipeline_stage = false then 
+        if (lhc_clk'event and lhc_clk = '1') then
             deta_comp_pipe <= deta_comp;
             dphi_comp_pipe <= dphi_comp;
             dr_comp_pipe <= dr_comp;
@@ -276,18 +276,6 @@ begin
             tbpt_comp_pipe <= tbpt_comp;
             tbupt_comp_pipe <= tbupt_comp;
             charge_comp_double_pipe <= charge_comp_double;
-        else
-            if (lhc_clk'event and lhc_clk = '1') then
-                deta_comp_pipe <= deta_comp;
-                dphi_comp_pipe <= dphi_comp;
-                dr_comp_pipe <= dr_comp;
-                mass_inv_comp_pipe <= mass_inv_comp;
-                mass_inv_upt_comp_pipe <= mass_inv_upt_comp;
-                mass_trv_comp_pipe <= mass_trv_comp;
-                tbpt_comp_pipe <= tbpt_comp;
-                tbupt_comp_pipe <= tbupt_comp;
-                charge_comp_double_pipe <= charge_comp_double;
-            end if;
         end if;
     end process;
     
@@ -360,14 +348,9 @@ begin
     -- Pipeline stage for obj_vs_templ
     obj_vs_templ_pipeline_p: process(lhc_clk, muon1_obj_vs_templ, muon2_obj_vs_templ)
         begin
-        if obj_vs_templ_pipeline_stage = false then 
+        if (lhc_clk'event and lhc_clk = '1') then
             muon1_obj_vs_templ_pipe <= muon1_obj_vs_templ;
             muon2_obj_vs_templ_pipe <= muon2_obj_vs_templ;
-        else
-            if (lhc_clk'event and lhc_clk = '1') then
-                muon1_obj_vs_templ_pipe <= muon1_obj_vs_templ;
-                muon2_obj_vs_templ_pipe <= muon2_obj_vs_templ;
-            end if;
         end if;
     end process;
 
