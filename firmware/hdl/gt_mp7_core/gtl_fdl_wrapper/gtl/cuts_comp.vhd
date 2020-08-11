@@ -57,6 +57,7 @@ entity cuts_comp is
         mass_trv: in std_logic_vector(MAX_MASS_VECTOR_WIDTH-1 downto 0) := (others => '0');
         mass_div_dr: in std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
         tbpt: in std_logic_vector(MAX_TBPT_VECTOR_WIDTH-1 downto 0) := (others => '0');
+        tbupt: in std_logic_vector(MAX_TBPT_VECTOR_WIDTH-1 downto 0) := (others => '0');
         deta_comp: out std_logic := '1';
         dphi_comp: out std_logic := '1';
         dr_comp: out std_logic := '1';

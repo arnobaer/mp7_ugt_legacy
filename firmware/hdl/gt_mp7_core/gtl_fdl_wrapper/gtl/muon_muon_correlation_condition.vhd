@@ -106,23 +106,23 @@ entity muon_muon_correlation_condition is
 
         requested_charge_correlation: string(1 to 2);
 
-        deta_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
-        deta_lower_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        deta_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        deta_lower_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        dphi_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
-        dphi_lower_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        dphi_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dphi_lower_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        dr_upper_limit: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0);
-        dr_lower_limit: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0);
+        dr_upper_limit: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dr_lower_limit: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        mass_upper_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0);
-        mass_lower_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0);
+        mass_upper_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        mass_lower_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        mass_div_dr_upper_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0);
-        mass_div_dr_lower_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0);
+        mass_div_dr_upper_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        mass_div_dr_lower_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0);
-        tbupt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0)
+        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        tbupt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
         
    );
     port(
@@ -190,7 +190,7 @@ begin
             same_i: if (same_bx = true) and j>i generate
                 comp_i: entity work.cuts_comp
                     generic map(
-                        deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
+                        deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut, twobody_upt_cut,
                         deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
                         dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit, tbpt_threshold, tbupt_threshold,
@@ -223,7 +223,7 @@ begin
             not_same_i: if same_bx = false generate
                 comp_i: entity work.cuts_comp
                     generic map(
-                        deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut,
+                        deta_cut, dphi_cut, dr_cut, mass_cut, mass_type, twobody_pt_cut, twobody_upt_cut,
                         deta_upper_limit, deta_lower_limit, dphi_upper_limit, dphi_lower_limit,
                         dr_upper_limit, dr_lower_limit, mass_upper_limit, mass_lower_limit,
                         mass_div_dr_upper_limit, mass_div_dr_lower_limit, tbpt_threshold, tbupt_threshold,
@@ -231,8 +231,8 @@ begin
                     )
                     port map(
                         deta(i,j), dphi(i,j), dr(i,j), mass_inv(i,j), mass_inv_upt(i,j), mass_trv(i,j), mass_div_dr(i,j), tbpt(i,j), tbupt(i,j),
-                        deta_comp_t(i,j), dphi_comp_t(i,j), dr_comp_t(i,j), mass_inv_comp_t(i,j), mass_inv_upt_comp_t(i,j), mass_trv_comp_t(i,j),
-                        mass_div_dr_comp_t(i,j), tbpt_comp_t(i,j), tbupt_comp_t(i,j)
+                        deta_comp(i,j), dphi_comp(i,j), dr_comp(i,j), mass_inv_comp(i,j), mass_inv_upt_comp(i,j), mass_trv_comp(i,j),
+                        mass_div_dr_comp(i,j), tbpt_comp(i,j), tbupt_comp(i,j)
                     );
             end generate not_same_i;
         end generate cuts_l_2;

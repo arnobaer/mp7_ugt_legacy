@@ -6,6 +6,7 @@
 -- Charge correlation selection implemented with "LS" and "OS" (charge correlation calculated in muon_charge_correlations.vhd)
 
 -- Version history:
+-- HB 2020-08-11: inserted "twobody unconstraint pt".
 -- HB 2020-06-09: implemented new muon structure with "unconstraint pt" [upt] and "impact parameter" [ip].
 -- HB 2019-06-14: updated for "five eta cuts".
 -- HB 2019-05-06: updated instances.
@@ -64,12 +65,9 @@ entity muon_conditions is
         ip_luts: muon_templates_ip_array;
         requested_charge_correlation: string(1 to 2);
         
-        twobody_pt_cut: boolean := false;
-        pt_width: positive := 1; 
-        pt_sq_threshold_vector: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
-        sin_cos_width: positive := 1;
-        pt_sq_sin_cos_precision : positive := 1
-
+        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        tbupt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
+        
     );
     port(
         lhc_clk : in std_logic;
@@ -81,9 +79,8 @@ entity muon_conditions is
         os_charcorr_triple: in muon_charcorr_triple_array := (others => (others => (others => '0')));
         ls_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
         os_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
-        pt : in diff_inputs_array(0 to NR_MUON_OBJECTS-1) := (others => (others => '0'));
-        cos_phi_integer : in sin_cos_integer_array(0 to NR_MUON_OBJECTS-1) := (others => 0);
-        sin_phi_integer : in sin_cos_integer_array(0 to NR_MUON_OBJECTS-1) := (others => 0)
+        tbpt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
+        tbupt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')))
     );
 end muon_conditions;
 
@@ -127,22 +124,38 @@ begin
         severity failure;        
     end generate check_tbpt_i;
     
--- Instantiation of two-body pt cut.
+    -- Comparison with limits for twobody pt and twobody unconstraint pt.
     twobody_pt_cut_i: if twobody_pt_cut = true and nr_templates = 2 generate
-        twobody_pt_i: entity work.twobody_pt
-            generic map(
-                muon_object_slice_1_low, muon_object_slice_1_high,
-                muon_object_slice_2_low, muon_object_slice_2_high,
-                nr_templates,                
-                twobody_pt_cut,
-                pt_width, 
-                pt_sq_threshold_vector,
-                sin_cos_width,
-                pt_sq_sin_cos_precision
-            )
-            port map(
-                pt, cos_phi_integer, sin_phi_integer, twobody_pt_comp
-            );
+        cuts_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
+            cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
+                same_i: if (same_bx = true) and j>i generate
+                    comp_i: entity work.cuts_comp
+                        generic map(
+                            twobody_pt_cut => twobody_pt_cut, twobody_upt_cut => twobody_upt_cut,
+                            tbpt_width => MU_MU_TBPT_VECTOR_WIDTH, tbupt_width => MU_MU_TBUPT_VECTOR_WIDTH
+                        )
+                        port map(
+                            tbpt => tbpt(i,j), tbupt => tbupt(i,j),
+                            tbpt_comp_t(i,j), tbupt_comp_t(i,j)
+                        );
+                    tbpt_comp(i,j) <= tbpt_comp_t(i,j);
+                    tbpt_comp(j,i) <= tbpt_comp_t(i,j);                
+                    tbupt_comp(i,j) <= tbupt_comp_t(i,j);
+                    tbupt_comp(j,i) <= tbupt_comp_t(i,j);                
+                end generate same_i;
+                not_same_i: if same_bx = false generate
+                    comp_i: entity work.cuts_comp
+                        generic map(
+                            twobody_pt_cut => twobody_pt_cut, twobody_upt_cut => twobody_upt_cut,
+                            tbpt_width => MU_MU_TBPT_VECTOR_WIDTH, tbupt_width => MU_MU_TBUPT_VECTOR_WIDTH
+                        )
+                        port map(
+                            tbpt => tbpt(i,j), tbupt => tbupt(i,j),
+                            tbpt_comp(i,j), tbupt_comp(i,j)
+                        );
+                end generate not_same_i;
+            end generate cuts_l_2;
+        end generate cuts_l_1;
     end generate twobody_pt_cut_i;
 
 -- Instantiation of object cuts.
