@@ -114,10 +114,10 @@ architecture rtl of muon_conditions is
     signal condition_and_or : std_logic;
 
     signal twobody_pt_comp, twobody_pt_comp_t, twobody_pt_comp_pipe : 
-        std_logic_2dim_array(0 to NR_MUON_OBJECTS, 0 to NR_MUON_OBJECTS) := (others => (others => '1'));
+        std_logic_2dim_array(muon_object_slice_1_low to muon_object_slice_1_high, muon_object_slice_2_low to muon_object_slice_2_high) := (others => (others => '1'));
 
 --     signal twobody_upt_comp, twobody_upt_comp_t, twobody_upt_comp_pipe : 
---         std_logic_2dim_array(0 to NR_MUON_OBJECTS, 0 to NR_MUON_OBJECTS) := (others => (others => '1'));
+--         std_logic_2dim_array(muon_object_slice_1_low to muon_object_slice_1_high, muon_object_slice_2_low to muon_object_slice_2_high) := (others => (others => '1'));
 
 begin
 
@@ -136,8 +136,8 @@ begin
     
     -- Comparison with limits for twobody pt and twobody unconstraint pt.
     twobody_pt_cut_i: if twobody_pt_cut = true and nr_templates = 2 generate
-        cuts_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
-            cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
+        cuts_l_1: for i in muon_object_slice_1_low to muon_object_slice_1_high generate 
+            cuts_l_2: for j in muon_object_slice_2_low to muon_object_slice_2_high generate
                 cuts_comp_i: if j>i generate
                     comp_i: entity work.cuts_comp
                         generic map(
