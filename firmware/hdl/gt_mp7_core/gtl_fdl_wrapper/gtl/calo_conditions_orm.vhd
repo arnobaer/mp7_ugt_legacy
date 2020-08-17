@@ -30,90 +30,87 @@ use work.gtl_pkg.all;
 
 entity calo_conditions_orm is
      generic(
-        deta_orm_cut: boolean := false;
-        dphi_orm_cut: boolean := false;
-        dr_orm_cut: boolean := true;
-
-        calo1_object_slice_1_low: natural;
-        calo1_object_slice_1_high: natural;
-        calo1_object_slice_2_low: natural;
-        calo1_object_slice_2_high: natural;
-        calo1_object_slice_3_low: natural;
-        calo1_object_slice_3_high: natural;
-        calo1_object_slice_4_low: natural;
-        calo1_object_slice_4_high: natural;
-        nr_templates: positive;
-        et_ge_mode_calo1: boolean;
         obj_type_calo1 : natural := EG_TYPE; -- eg=0, jet=1, tau=2
-        et_thresholds_calo1: calo_templates_array;
-        nr_eta_windows_calo1 : calo_templates_natural_array;
-        eta_w1_upper_limits_calo1: calo_templates_array;
-        eta_w1_lower_limits_calo1: calo_templates_array;
-        eta_w2_upper_limits_calo1: calo_templates_array;
-        eta_w2_lower_limits_calo1: calo_templates_array;
-        eta_w3_upper_limits_calo1: calo_templates_array;
-        eta_w3_lower_limits_calo1: calo_templates_array;
-        eta_w4_upper_limits_calo1: calo_templates_array;
-        eta_w4_lower_limits_calo1: calo_templates_array;
-        eta_w5_upper_limits_calo1: calo_templates_array;
-        eta_w5_lower_limits_calo1: calo_templates_array;
-        phi_full_range_calo1 : calo_templates_boolean_array;
-        phi_w1_upper_limits_calo1: calo_templates_array;
-        phi_w1_lower_limits_calo1: calo_templates_array;
-        phi_w2_ignore_calo1 : calo_templates_boolean_array;
-        phi_w2_upper_limits_calo1: calo_templates_array;
-        phi_w2_lower_limits_calo1: calo_templates_array;
-        iso_luts_calo1: calo_templates_iso_array;
+        nr_obj_calo1: natural := NR_EG_OBJECTS;        
+        calo1_object_slice_1_low: natural := 0;
+        calo1_object_slice_1_high: natural := 0;
+        calo1_object_slice_2_low: natural := 0;
+        calo1_object_slice_2_high: natural := 0;
+        calo1_object_slice_3_low: natural := 0;
+        calo1_object_slice_3_high: natural := 0;
+        calo1_object_slice_4_low: natural := 0;
+        calo1_object_slice_4_high: natural := 0;
+        nr_templates: positive := 4;
+        et_ge_mode_calo1: boolean := true;
+        et_thresholds_calo1: calo_templates_array := (others => (others => '0'));
+        nr_eta_windows_calo1 : calo_templates_natural_array := (others => 0);
+        eta_w1_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w1_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w2_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w2_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w3_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w3_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w4_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w4_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w5_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
+        eta_w5_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
+        phi_full_range_calo1 : calo_templates_boolean_array := (others => true);
+        phi_w1_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
+        phi_w1_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
+        phi_w2_ignore_calo1 : calo_templates_boolean_array := (others => true);
+        phi_w2_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
+        phi_w2_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
+        iso_luts_calo1: calo_templates_iso_array := (others => X"F");
 
-        calo2_object_low: natural;
-        calo2_object_high: natural;
-        et_ge_mode_calo2: boolean;
         obj_type_calo2: natural := TAU_TYPE;
-        et_threshold_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        nr_eta_windows_calo2 : natural;
-        eta_w1_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w1_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w2_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w2_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w3_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w3_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w4_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w4_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w5_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        eta_w5_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        phi_full_range_calo2: boolean;
-        phi_w1_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        phi_w1_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        phi_w2_ignore_calo2: boolean;
-        phi_w2_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
-        phi_w2_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
+        nr_obj_calo2: natural := NR_TAU_OBJECTS;        
+        calo2_object_low: natural := 0;
+        calo2_object_high: natural := 11;
+        et_ge_mode_calo2: boolean := true;
+        et_threshold_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        nr_eta_windows_calo2 : natural := 0;
+        eta_w1_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w1_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w2_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w2_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w3_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w3_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w4_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w4_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w5_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        eta_w5_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        phi_full_range_calo2: boolean := true;
+        phi_w1_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        phi_w1_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        phi_w2_ignore_calo2: boolean := true;
+        phi_w2_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        phi_w2_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0);
 
-        diff_eta_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
-        diff_eta_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        deta_orm_cut: boolean := false;
+        deta_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        deta_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        diff_phi_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
-        diff_phi_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        dphi_orm_cut: boolean := false;
+        dphi_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dphi_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        dr_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0);
-        dr_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0);
+        dr_orm_cut: boolean := false;
+        dr_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dr_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
         twobody_pt_cut: boolean := false;
-        pt_width: positive := 1; 
-        pt_sq_threshold_vector: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
-        sin_cos_width: positive := 1;
-        pt_sq_sin_cos_precision : positive := 1
+        tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
     );
     port(
         clk: in std_logic;
         calo1: in calo_objects_array;
         calo2: in calo_objects_array;
-        diff_eta_orm: in deta_dphi_vector_array;
-        diff_phi_orm: in deta_dphi_vector_array;
-        condition_o: out std_logic;
-        pt : in diff_inputs_array(0 to MAX_CALO_OBJECTS-1) := (others => (others => '0'));
-        cos_phi_integer : in sin_cos_integer_array(0 to MAX_CALO_OBJECTS-1) := (others => 0);
-        sin_phi_integer : in sin_cos_integer_array(0 to MAX_CALO_OBJECTS-1) := (others => 0)
+        deta_orm : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        dphi_orm : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        dr_orm: in delta_r_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        tbpt : in tbpt_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo1-1) := (others => (others => (others => '0')));
+        condition_o: out std_logic
     );
 end calo_conditions_orm;
 
@@ -135,8 +132,8 @@ architecture rtl of calo_conditions_orm is
     signal calo1_obj_slice_3_vs_templ, calo1_obj_slice_3_vs_templ_pipe  : object_slice_3_vs_template_array(calo1_object_slice_3_low to calo1_object_slice_3_high, 1 to 1);
     signal calo1_obj_slice_4_vs_templ, calo1_obj_slice_4_vs_templ_pipe  : object_slice_4_vs_template_array(calo1_object_slice_4_low to calo1_object_slice_4_high, 1 to 1);
     
-    signal diff_eta_orm_comp, diff_eta_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo2_object_low to calo2_object_high) := (others => (others => '0'));
-    signal diff_phi_orm_comp, diff_phi_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo2_object_low to calo2_object_high) := (others => (others => '0'));
+    signal deta_orm_comp, deta_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo2_object_low to calo2_object_high) := (others => (others => '0'));
+    signal dphi_orm_comp, dphi_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo2_object_low to calo2_object_high) := (others => (others => '0'));
     signal dr_orm_comp, dr_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo2_object_low to calo2_object_high) := (others => (others => '0'));
     signal calo2_obj_vs_templ, calo2_obj_vs_templ_pipe : std_logic_2dim_array(calo2_object_low to calo2_object_high, 1 to 1) := (others => (others => '0'));
 
@@ -216,10 +213,10 @@ begin
     cuts_orm_l_1: for i in 0 to MAX_CALO_OBJECTS-1 generate 
         cuts_orm_l_2: for k in calo2_object_low to calo2_object_high generate
             deta_orm_cut_i: if deta_orm_cut = true generate
-                diff_eta_orm_comp(i,k) <= '1' when diff_eta_orm(i,k) >= diff_eta_orm_lower_limit_vector and diff_eta_orm(i,k) <= diff_eta_orm_upper_limit_vector else '0';
+                deta_orm_comp(i,k) <= '1' when deta_orm(i,k) >= deta_orm_lower_limit_vector and deta_orm(i,k) <= deta_orm_upper_limit_vector else '0';
             end generate deta_orm_cut_i;
             dphi_orm_cut_i: if dphi_orm_cut = true generate
-                diff_phi_orm_comp(i,k) <= '1' when diff_phi_orm(i,k) >= diff_phi_orm_lower_limit_vector and diff_phi_orm(i,k) <= diff_phi_orm_upper_limit_vector else '0';
+                dphi_orm_comp(i,k) <= '1' when dphi_orm(i,k) >= dphi_orm_lower_limit_vector and dphi_orm(i,k) <= dphi_orm_upper_limit_vector else '0';
             end generate dphi_orm_cut_i;
             dr_orm_cut_i: if dr_orm_cut = true generate
                 dr_calculator_i: entity work.dr_calculator
@@ -228,8 +225,8 @@ begin
                         lower_limit_vector => dr_orm_lower_limit_vector
                     )
                     port map(
-                        diff_eta => diff_eta_orm(i,k),
-                        diff_phi => diff_phi_orm(i,k),
+                        deta => deta_orm(i,k),
+                        dphi => dphi_orm(i,k),
                         dr_comp => dr_orm_comp(i,k)
                     );
             end generate dr_orm_cut_i;
@@ -237,7 +234,7 @@ begin
     end generate cuts_orm_l_1;
 
 -- Pipeline stage for obj_vs_templ
-    obj_vs_templ_pipeline_p: process(clk, calo1_obj_slice_1_vs_templ, calo1_obj_slice_2_vs_templ, calo1_obj_slice_3_vs_templ, calo1_obj_slice_4_vs_templ, calo2_obj_vs_templ,           diff_eta_orm_comp, diff_phi_orm_comp, dr_orm_comp)
+    obj_vs_templ_pipeline_p: process(clk, calo1_obj_slice_1_vs_templ, calo1_obj_slice_2_vs_templ, calo1_obj_slice_3_vs_templ, calo1_obj_slice_4_vs_templ, calo2_obj_vs_templ,           deta_orm_comp, dphi_orm_comp, dr_orm_comp)
     begin
         if obj_vs_templ_pipeline_stage = false then
             calo1_obj_slice_1_vs_templ_pipe <= calo1_obj_slice_1_vs_templ;
@@ -245,8 +242,8 @@ begin
             calo1_obj_slice_3_vs_templ_pipe <= calo1_obj_slice_3_vs_templ;
             calo1_obj_slice_4_vs_templ_pipe <= calo1_obj_slice_4_vs_templ;
             calo2_obj_vs_templ_pipe <= calo2_obj_vs_templ;
-            diff_eta_orm_comp_pipe <= diff_eta_orm_comp;
-            diff_phi_orm_comp_pipe <= diff_phi_orm_comp;
+            deta_orm_comp_pipe <= deta_orm_comp;
+            dphi_orm_comp_pipe <= dphi_orm_comp;
             dr_orm_comp_pipe <= dr_orm_comp;
         elsif (clk'event and clk = '1') then
             calo1_obj_slice_1_vs_templ_pipe <= calo1_obj_slice_1_vs_templ;
@@ -254,8 +251,8 @@ begin
             calo1_obj_slice_3_vs_templ_pipe <= calo1_obj_slice_3_vs_templ;
             calo1_obj_slice_4_vs_templ_pipe <= calo1_obj_slice_4_vs_templ;
             calo2_obj_vs_templ_pipe <= calo2_obj_vs_templ;
-            diff_eta_orm_comp_pipe <= diff_eta_orm_comp;
-            diff_phi_orm_comp_pipe <= diff_phi_orm_comp;
+            deta_orm_comp_pipe <= deta_orm_comp;
+            dphi_orm_comp_pipe <= dphi_orm_comp;
             dr_orm_comp_pipe <= dr_orm_comp;
         end if;
     end process;
@@ -275,7 +272,7 @@ begin
             calo1_obj_slice_1_vs_templ_pipe, calo1_obj_slice_2_vs_templ_pipe, calo1_obj_slice_3_vs_templ_pipe, calo1_obj_slice_4_vs_templ_pipe, 
             calo2_obj_vs_templ_pipe,
             twobody_pt_comp_pipe, 
-            diff_eta_orm_comp_pipe, diff_phi_orm_comp_pipe, dr_orm_comp_pipe,
+            deta_orm_comp_pipe, dphi_orm_comp_pipe, dr_orm_comp_pipe,
             condition_o
         );
 

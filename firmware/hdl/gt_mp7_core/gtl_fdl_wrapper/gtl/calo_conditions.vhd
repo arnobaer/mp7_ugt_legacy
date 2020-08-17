@@ -106,24 +106,23 @@ architecture rtl of calo_conditions is
 
 begin
 
--- Instantiation of two-body pt cut.
-    twobody_pt_cut_i: if twobody_pt_cut = true and nr_templates = 2 generate
-        twobody_pt_i: entity work.twobody_pt
-            generic map(
-                calo_object_slice_1_low, calo_object_slice_1_high,
-                calo_object_slice_2_low, calo_object_slice_2_high,
-                nr_templates,                
-                twobody_pt_cut,
-                pt_width, 
-                pt_sq_threshold_vector,
-                sin_cos_width,
-                pt_sq_sin_cos_precision
-            )
-            port map(
-                pt, cos_phi_integer, sin_phi_integer, twobody_pt_comp
-            );
-    end generate twobody_pt_cut_i;
-
+-- Comparison with limits.
+    tbpt_l_1: for i in 0 to nr_objects_calo1-1 generate 
+        tbpt_l_2: for j in 0 to nr_objects_calo2-1 generate
+            tbpt_comp_l1: if (obj_type_calo1 = obj_type_calo2) and (same_bx = true) and j>i generate
+                comp_i: entity work.cuts_comp
+                    generic map(
+                        twobody_pt_cut => twobody_pt_cut,
+                        tbpt_width => tbpt_width
+                    )
+                    port map(
+                        tbpt => tbpt(i,j),
+                        twobody_pt_comp => tbpt_comp_t(i,j)
+                    );
+            end generate tbpt_comp_l2;
+        end generate tbpt_l_2;
+    end generate tbpt_l_1;
+    
 -- Instantiation of object cuts.
     obj_cuts_i: entity work.calo_obj_cuts
         generic map(
