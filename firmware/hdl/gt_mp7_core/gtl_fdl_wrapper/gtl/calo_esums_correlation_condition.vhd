@@ -3,6 +3,7 @@
 -- Correlation Condition module for calorimeter object types (eg, jet and tau) and esums (etm, etm_hf and htm).
 
 -- Version history:
+-- HB 2020-08-17: reordered generic, added default values.
 -- HB 2020-07-03: changed for new cuts structure (calculation outside of conditions).
 -- HB 2019-06-17: updated for "five eta cuts".
 -- HB 2019-05-06: updated instances.

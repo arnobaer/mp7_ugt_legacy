@@ -6,6 +6,7 @@
 -- Charge correlation selection implemented with "LS" and "OS" (charge correlation calculated in muon_charge_correlations.vhd)
 
 -- Version history:
+-- HB 2020-08-17: reordered generic, added default values.
 -- HB 2020-08-11: inserted "twobody unconstraint pt".
 -- HB 2020-06-09: implemented new muon structure with "unconstraint pt" [upt] and "impact parameter" [ip].
 -- HB 2019-06-14: updated for "five eta cuts".
@@ -28,52 +29,52 @@ use work.gtl_pkg.all;
 
 entity muon_conditions is
     generic (
-        muon_object_slice_1_low: natural;
-        muon_object_slice_1_high: natural;
-        muon_object_slice_2_low: natural;
-        muon_object_slice_2_high: natural;
-        muon_object_slice_3_low: natural;
-        muon_object_slice_3_high: natural;
-        muon_object_slice_4_low: natural;
-        muon_object_slice_4_high: natural;
-        nr_templates: positive;
-        pt_ge_mode : boolean;
-        pt_thresholds: muon_templates_array;
-        nr_eta_windows : muon_templates_natural_array;
-        eta_w1_upper_limits: muon_templates_array;
-        eta_w1_lower_limits: muon_templates_array;
-        eta_w2_upper_limits: muon_templates_array;
-        eta_w2_lower_limits: muon_templates_array;
-        eta_w3_upper_limits: muon_templates_array;
-        eta_w3_lower_limits: muon_templates_array;
-        eta_w4_upper_limits: muon_templates_array;
-        eta_w4_lower_limits: muon_templates_array;
-        eta_w5_upper_limits: muon_templates_array;
-        eta_w5_lower_limits: muon_templates_array;
-        phi_full_range : muon_templates_boolean_array;
-        phi_w1_upper_limits: muon_templates_array;
-        phi_w1_lower_limits: muon_templates_array;
-        phi_w2_ignore : muon_templates_boolean_array;
-        phi_w2_upper_limits: muon_templates_array;
-        phi_w2_lower_limits: muon_templates_array;
-        requested_charges: muon_templates_string_array;
-        qual_luts: muon_templates_quality_array;
-        iso_luts: muon_templates_iso_array;
-        upt_cuts: muon_templates_boolean_array;
-        upt_upper_limits: muon_templates_array;
-        upt_lower_limits: muon_templates_array;
-        ip_luts: muon_templates_ip_array;
-        requested_charge_correlation: string(1 to 2);
+        muon_object_slice_1_low: natural := 0;
+        muon_object_slice_1_high: natural := 0;
+        muon_object_slice_2_low: natural := 0;
+        muon_object_slice_2_high: natural := 0;
+        muon_object_slice_3_low: natural := 0;
+        muon_object_slice_3_high: natural := 0;
+        muon_object_slice_4_low: natural := 0;
+        muon_object_slice_4_high: natural := 0;
+        nr_templates: positive := 4;
+        pt_ge_mode : boolean := true;
+        pt_thresholds: muon_templates_array := (others => (others => '0'));
+        nr_eta_windows : muon_templates_natural_array := (others => 0);
+        eta_w1_upper_limits: muon_templates_array := (others => (others => '0'));
+        eta_w1_lower_limits: muon_templates_array := (others => (others => '0'));
+        eta_w2_upper_limits: muon_templates_array := (others => (others => '0'));
+        eta_w2_lower_limits: muon_templates_array := (others => (others => '0'));
+        eta_w3_upper_limits: muon_templates_array := (others => (others => '0'));
+        eta_w3_lower_limits: muon_templates_array := (others => (others => '0'));
+        eta_w4_upper_limits: muon_templates_array := (others => (others => '0'));
+        eta_w4_lower_limits: muon_templates_array := (others => (others => '0'));
+        eta_w5_upper_limits: muon_templates_array := (others => (others => '0'));
+        eta_w5_lower_limits: muon_templates_array := (others => (others => '0'));
+        phi_full_range : muon_templates_boolean_array := (others => true);
+        phi_w1_upper_limits: muon_templates_array := (others => (others => '0'));
+        phi_w1_lower_limits: muon_templates_array := (others => (others => '0'));
+        phi_w2_ignore : muon_templates_boolean_array := (others => true);
+        phi_w2_upper_limits: muon_templates_array := (others => (others => '0'));
+        phi_w2_lower_limits: muon_templates_array := (others => (others => '0'));
+        requested_charges: muon_templates_string_array := (others => "ign");
+        qual_luts: muon_templates_quality_array := (others => X"FFFF");
+        iso_luts: muon_templates_iso_array := (others => X"F");
+        upt_cuts: muon_templates_boolean_array := (others => false);
+        upt_upper_limits: muon_templates_array := (others => (others => '0'));
+        upt_lower_limits: muon_templates_array := (others => (others => '0'));
+        ip_luts: muon_templates_ip_array := (others => X"F");
+        requested_charge_correlation: string(1 to 2) := "ig";
         
         twobody_pt_cut: boolean := false;
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        twobody_upt_cut: boolean := false;
         tbupt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
         
     );
     port(
         lhc_clk : in std_logic;
         data_i : in muon_objects_array;
-        condition_o : out std_logic;
         ls_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
         os_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
         ls_charcorr_triple: in muon_charcorr_triple_array := (others => (others => (others => '0')));
@@ -81,7 +82,8 @@ entity muon_conditions is
         ls_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
         os_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
         tbpt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
-        tbupt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')))
+        tbupt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
+        condition_o : out std_logic
     );
 end muon_conditions;
 
