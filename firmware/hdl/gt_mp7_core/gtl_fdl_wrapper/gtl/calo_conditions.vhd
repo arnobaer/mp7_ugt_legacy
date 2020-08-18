@@ -3,6 +3,7 @@
 -- Condition module for calorimeter object types (eg, jet and tau) conditions.
 
 -- Version history:
+-- HB 2020-08-14: reordered generic, added default values.
 -- HB 2019-10-21: bug fix input ports.
 -- HB 2019-06-14: updated for "five eta cuts".
 -- HB 2019-05-03: used instances "calo_cuts" and "calo_cond_matrix" (proposal Dinyar/Hannes) to reduce resources. Inserted instance for twobody_pt.
@@ -34,8 +35,8 @@ entity calo_conditions is
         calo_object_slice_4_low: natural := 0;
         calo_object_slice_4_high: natural := 0;
         nr_templates: positive := 4;
-        et_ge_mode: boolean := true;
-        et_thresholds: calo_templates_array := (others => (others => '0'));
+        pt_ge_mode: boolean := true;
+        pt_thresholds: calo_templates_array := (others => (others => '0'));
         nr_eta_windows : calo_templates_natural_array := (others => 0);
         eta_w1_upper_limits: calo_templates_array := (others => (others => '0'));
         eta_w1_lower_limits: calo_templates_array := (others => (others => '0'));
@@ -56,6 +57,7 @@ entity calo_conditions is
         iso_luts: calo_templates_iso_array := (others => X"F");
         
         twobody_pt_cut: boolean := false;
+        tbpt_width: positive := 50;
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
     );
     port(
@@ -101,28 +103,30 @@ architecture rtl of calo_conditions is
     attribute keep of condition_and_or_sig2  : signal is true;
     attribute keep of condition_and_or_sig3  : signal is true;
 
-    signal twobody_pt_comp, twobody_pt_comp_temp, twobody_pt_comp_pipe : 
+    signal twobody_pt_comp, twobody_pt_comp_pipe : 
         std_logic_2dim_array(calo_object_slice_1_low to calo_object_slice_1_high, calo_object_slice_2_low to calo_object_slice_2_high) := (others => (others => '1'));
 
 begin
 
 -- Comparison with limits.
-    tbpt_l_1: for i in 0 to nr_objects_calo1-1 generate 
-        tbpt_l_2: for j in 0 to nr_objects_calo2-1 generate
-            tbpt_comp_l1: if (obj_type_calo1 = obj_type_calo2) and (same_bx = true) and j>i generate
-                comp_i: entity work.cuts_comp
-                    generic map(
-                        twobody_pt_cut => twobody_pt_cut,
-                        tbpt_width => tbpt_width
-                    )
-                    port map(
-                        tbpt => tbpt(i,j),
-                        twobody_pt_comp => tbpt_comp_t(i,j)
-                    );
-            end generate tbpt_comp_l2;
-        end generate tbpt_l_2;
-    end generate tbpt_l_1;
-    
+    tbpt_sel: if twobody_pt_cut generate
+        tbpt_l_1: for i in 0 to nr_obj-1 generate 
+            tbpt_l_2: for j in 0 to nr_obj-1 generate
+                comp_if: if j>i generate
+                    comp_i: entity work.cuts_comp
+                        generic map(
+                            twobody_pt_cut => twobody_pt_cut,
+                            tbpt_width => tbpt_width
+                        )
+                        port map(
+                            tbpt => tbpt(i,j),
+                            twobody_pt_comp => twobody_pt_comp(i,j)
+                        );
+                end generate comp_if;
+            end generate tbpt_l_2;
+        end generate tbpt_l_1;
+    end generate tbpt_sel;
+
 -- Instantiation of object cuts.
     obj_cuts_i: entity work.calo_obj_cuts
         generic map(
@@ -130,8 +134,8 @@ begin
             calo_object_slice_2_low, calo_object_slice_2_high,
             calo_object_slice_3_low, calo_object_slice_3_high,
             calo_object_slice_4_low, calo_object_slice_4_high,
-            nr_templates, et_ge_mode, obj_type,
-            et_thresholds,
+            nr_templates, pt_ge_mode, obj_type,
+            pt_thresholds,
             nr_eta_windows,
             eta_w1_upper_limits, eta_w1_lower_limits,
             eta_w2_upper_limits, eta_w2_lower_limits,

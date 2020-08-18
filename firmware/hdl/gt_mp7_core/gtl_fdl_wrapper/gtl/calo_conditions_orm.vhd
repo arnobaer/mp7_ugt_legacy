@@ -3,6 +3,7 @@
 -- Condition module for calorimeter object types (eg, jet and tau) conditions with "overlap removal (orm)".
 
 -- Version history:
+-- HB 2020-08-14: reordered generic, added default values.
 -- HB 2019-10-17: cleaned up.
 -- HB 2019-10-16: bug fix in cond_matrix_i (calo2_obj_vs_templ_pipe).
 -- HB 2019-06-17: updated for "five eta cuts".
@@ -41,8 +42,8 @@ entity calo_conditions_orm is
         calo1_object_slice_4_low: natural := 0;
         calo1_object_slice_4_high: natural := 0;
         nr_templates: positive := 4;
-        et_ge_mode_calo1: boolean := true;
-        et_thresholds_calo1: calo_templates_array := (others => (others => '0'));
+        pt_ge_mode_calo1: boolean := true;
+        pt_thresholds_calo1: calo_templates_array := (others => (others => '0'));
         nr_eta_windows_calo1 : calo_templates_natural_array := (others => 0);
         eta_w1_upper_limits_calo1: calo_templates_array := (others => (others => '0'));
         eta_w1_lower_limits_calo1: calo_templates_array := (others => (others => '0'));
@@ -66,8 +67,8 @@ entity calo_conditions_orm is
         nr_obj_calo2: natural := NR_TAU_OBJECTS;        
         calo2_object_low: natural := 0;
         calo2_object_high: natural := 11;
-        et_ge_mode_calo2: boolean := true;
-        et_threshold_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
+        pt_ge_mode_calo2: boolean := true;
+        pt_threshold_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         nr_eta_windows_calo2 : natural := 0;
         eta_w1_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         eta_w1_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
@@ -88,18 +89,19 @@ entity calo_conditions_orm is
         iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0);
 
         deta_orm_cut: boolean := false;
-        deta_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
-        deta_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        deta_orm_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        deta_orm_lower_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
         dphi_orm_cut: boolean := false;
-        dphi_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
-        dphi_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dphi_orm_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dphi_orm_lower_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
         dr_orm_cut: boolean := false;
-        dr_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
-        dr_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dr_orm_upper_limit: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        dr_orm_lower_limit: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
         twobody_pt_cut: boolean := false;
+        tbpt_width: positive := 50;
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
     );
     port(
@@ -144,24 +146,43 @@ architecture rtl of calo_conditions_orm is
 
 begin
 
--- Instantiation of two-body pt cut.
-    twobody_pt_cut_i: if twobody_pt_cut = true and nr_templates = 2 generate
-        twobody_pt_i: entity work.twobody_pt
-            generic map(
-                calo1_object_slice_1_low, calo1_object_slice_1_high,
-                calo1_object_slice_2_low, calo1_object_slice_2_high,
-                nr_templates,                
-                twobody_pt_cut,
-                pt_width, 
-                pt_sq_threshold_vector,
-                sin_cos_width,
-                pt_sq_sin_cos_precision
-            )
-            port map(
-                pt, cos_phi_integer, sin_phi_integer, twobody_pt_comp
-            );
-    end generate twobody_pt_cut_i;
-
+-- Comparison with limits.
+    orm_l_1: for i in 0 to nr_obj_calo1-1 generate 
+        orm_l_2: for j in 0 to nr_obj_calo2-1 generate
+            comp_if: if j>i generate
+                comp_i: entity work.cuts_comp
+                    generic map(
+                        deta_cut => deta_orm_cut, dphi_cut => dphi_orm_cut, dr_cut => dr_orm_cut,
+                        deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_orm_lower_limit, 
+                        dphi_upper_limit => dphi_orm_upper_limit, dphi_lower_limit => dphi_orm_lower_limit,
+                        dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
+                    )
+                    port map(
+                        deta => deta_orm(i,j), dphi => dphi_orm(i,j), dr => dr_orm(i,j),
+                        deta_comp => deta_orm_comp(i,j), dphi_comp => dphi_orm_comp(i,j), dr_comp => dr_orm_comp(i,j)
+                    );
+            end generate comp_if;
+        end generate orm_l_2;
+    end generate orm_l_1;
+    
+    tbpt_sel: if twobody_pt_cut generate
+        tbpt_l_1: for i in 0 to nr_obj_calo1-1 generate 
+            tbpt_l_2: for j in 0 to nr_obj_calo1-1 generate
+                comp_if: if j>i generate
+                    comp_i: entity work.cuts_comp
+                        generic map(
+                            twobody_pt_cut => twobody_pt_cut,
+                            tbpt_width => tbpt_width
+                        )
+                        port map(
+                            tbpt => tbpt(i,j),
+                            twobody_pt_comp => twobody_pt_comp(i,j)
+                        );
+                end generate comp_if;
+            end generate tbpt_l_2;
+        end generate tbpt_l_1;
+    end generate tbpt_sel;
+        
 -- Instantiation of object cuts for calo1.
     calo1_obj_cuts_i: entity work.calo_obj_cuts
         generic map(
@@ -169,8 +190,8 @@ begin
             calo1_object_slice_2_low, calo1_object_slice_2_high,
             calo1_object_slice_3_low, calo1_object_slice_3_high,
             calo1_object_slice_4_low, calo1_object_slice_4_high,
-            nr_templates, et_ge_mode_calo1, obj_type_calo1,
-            et_thresholds_calo1,
+            nr_templates, pt_ge_mode_calo1, obj_type_calo1,
+            pt_thresholds_calo1,
             nr_eta_windows_calo1, 
             eta_w1_upper_limits_calo1, eta_w1_lower_limits_calo1,
             eta_w2_upper_limits_calo1, eta_w2_lower_limits_calo1,
@@ -188,8 +209,8 @@ begin
 -- Instantiation of object cuts for calo2.
     calo2_obj_l: for i in calo2_object_low to calo2_object_high generate
         calo2_comp_i: entity work.calo_comparators
-            generic map(et_ge_mode_calo2, obj_type_calo2,
-                et_threshold_calo2,
+            generic map(pt_ge_mode_calo2, obj_type_calo2,
+                pt_threshold_calo2,
                 nr_eta_windows_calo2,
                 eta_w1_upper_limit_calo2, eta_w1_lower_limit_calo2,
                 eta_w2_upper_limit_calo2, eta_w2_lower_limit_calo2,
@@ -209,32 +230,8 @@ begin
             );
     end generate calo2_obj_l;
 
--- HB 2017-09-05: for optimisation - splitting to different loops with "calo1_object_slice_1_low to calo1_object_slice_1_high", etc.
-    cuts_orm_l_1: for i in 0 to MAX_CALO_OBJECTS-1 generate 
-        cuts_orm_l_2: for k in calo2_object_low to calo2_object_high generate
-            deta_orm_cut_i: if deta_orm_cut = true generate
-                deta_orm_comp(i,k) <= '1' when deta_orm(i,k) >= deta_orm_lower_limit_vector and deta_orm(i,k) <= deta_orm_upper_limit_vector else '0';
-            end generate deta_orm_cut_i;
-            dphi_orm_cut_i: if dphi_orm_cut = true generate
-                dphi_orm_comp(i,k) <= '1' when dphi_orm(i,k) >= dphi_orm_lower_limit_vector and dphi_orm(i,k) <= dphi_orm_upper_limit_vector else '0';
-            end generate dphi_orm_cut_i;
-            dr_orm_cut_i: if dr_orm_cut = true generate
-                dr_calculator_i: entity work.dr_calculator
-                    generic map(
-                        upper_limit_vector => dr_orm_upper_limit_vector,
-                        lower_limit_vector => dr_orm_lower_limit_vector
-                    )
-                    port map(
-                        deta => deta_orm(i,k),
-                        dphi => dphi_orm(i,k),
-                        dr_comp => dr_orm_comp(i,k)
-                    );
-            end generate dr_orm_cut_i;
-        end generate cuts_orm_l_2;
-    end generate cuts_orm_l_1;
-
 -- Pipeline stage for obj_vs_templ
-    obj_vs_templ_pipeline_p: process(clk, calo1_obj_slice_1_vs_templ, calo1_obj_slice_2_vs_templ, calo1_obj_slice_3_vs_templ, calo1_obj_slice_4_vs_templ, calo2_obj_vs_templ,           deta_orm_comp, dphi_orm_comp, dr_orm_comp)
+    obj_vs_templ_pipeline_p: process(clk, calo1_obj_slice_1_vs_templ, calo1_obj_slice_2_vs_templ, calo1_obj_slice_3_vs_templ, calo1_obj_slice_4_vs_templ, calo2_obj_vs_templ, deta_orm_comp, dphi_orm_comp, dr_orm_comp, twobody_pt_comp)
     begin
         if obj_vs_templ_pipeline_stage = false then
             calo1_obj_slice_1_vs_templ_pipe <= calo1_obj_slice_1_vs_templ;
@@ -245,6 +242,7 @@ begin
             deta_orm_comp_pipe <= deta_orm_comp;
             dphi_orm_comp_pipe <= dphi_orm_comp;
             dr_orm_comp_pipe <= dr_orm_comp;
+            twobody_pt_comp_pipe <= twobody_pt_comp;
         elsif (clk'event and clk = '1') then
             calo1_obj_slice_1_vs_templ_pipe <= calo1_obj_slice_1_vs_templ;
             calo1_obj_slice_2_vs_templ_pipe <= calo1_obj_slice_2_vs_templ;
@@ -254,6 +252,7 @@ begin
             deta_orm_comp_pipe <= deta_orm_comp;
             dphi_orm_comp_pipe <= dphi_orm_comp;
             dr_orm_comp_pipe <= dr_orm_comp;
+            twobody_pt_comp_pipe <= twobody_pt_comp;
         end if;
     end process;
 

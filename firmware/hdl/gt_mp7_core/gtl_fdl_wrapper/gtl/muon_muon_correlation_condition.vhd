@@ -178,16 +178,16 @@ architecture rtl of muon_muon_correlation_condition is
     (others => (others => '1'));
     signal tbpt_comp_t, tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
     (others => (others => '1'));
-    signal tbupt_comp_t, tbupt_comp, tbupt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
-    (others => (others => '1'));
+--     signal tbupt_comp_t, tbupt_comp, tbupt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+--     (others => (others => '1'));
 
     signal condition_and_or : std_logic;
     
 begin
 
     -- Comparison with limits.
-    cuts_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
-        cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
+    cuts_l_1: for i in muon1_object_low to muon1_object_high generate 
+        cuts_l_2: for j in muon2_object_low to muon2_object_high generate
             same_i: if (same_bx = true) and j>i generate
                 comp_i: entity work.cuts_comp
                     generic map(
@@ -265,7 +265,7 @@ begin
 --  ***************************************************************************************
 
     -- Pipeline stage for charge correlation comparison
-    cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_inv_upt_comp, mass_trv_comp, tbpt_comp, tbupt_comp, charge_comp_double)
+    cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_inv_upt_comp, mass_trv_comp, tbpt_comp, charge_comp_double)
         begin
         if (lhc_clk'event and lhc_clk = '1') then
             deta_comp_pipe <= deta_comp;
@@ -275,7 +275,7 @@ begin
             mass_inv_upt_comp_pipe <= mass_inv_upt_comp;
             mass_trv_comp_pipe <= mass_trv_comp;
             tbpt_comp_pipe <= tbpt_comp;
-            tbupt_comp_pipe <= tbupt_comp;
+--             tbupt_comp_pipe <= tbupt_comp;
             charge_comp_double_pipe <= charge_comp_double;
         end if;
     end process;
@@ -356,7 +356,7 @@ begin
     end process;
 
     -- "Matrix" of permutations in an and-or-structure.
-    matrix_p: process(muon1_obj_vs_templ_pipe, muon2_obj_vs_templ_pipe, charge_comp_double_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_inv_upt_comp_pipe, mass_trv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe, tbupt_comp_pipe)
+    matrix_p: process(muon1_obj_vs_templ_pipe, muon2_obj_vs_templ_pipe, charge_comp_double_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_inv_upt_comp_pipe, mass_trv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
         variable index : integer := 0;
         variable obj_vs_templ_vec : std_logic_vector((muon1_object_high-muon1_object_low+1)*(muon2_object_high-muon2_object_low+1) downto 1) := (others => '0');
         variable condition_and_or_tmp : std_logic := '0';
@@ -369,11 +369,11 @@ begin
                 if same_bx = true then
                     if j/=i then
                         index := index + 1;
-                        obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j) and tbupt_comp_pipe(i,j);
+                        obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
                     end if;
                 else
                     index := index + 1;
-                    obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j) and tbupt_comp_pipe(i,j);
+                    obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
                 end if;
             end loop;
         end loop;
