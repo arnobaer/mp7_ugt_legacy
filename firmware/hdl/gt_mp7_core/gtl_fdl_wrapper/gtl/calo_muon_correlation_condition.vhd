@@ -154,21 +154,21 @@ architecture rtl of calo_muon_correlation_condition is
 begin
 
     -- Comparison with limits.
-    cuts_l_1: for i in 0 to nr_obj_calo1-1 generate 
-        cuts_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
-                comp_i: entity work.cuts_comp
-                    generic map(
-                        deta_cut => deta_cut, dphi_cut => dphi_cut, dr_cut => dr_cut, mass_cut => mass_cut, mass_type => mass_type, twobody_pt_cut => twobody_pt_cut,
-                        deta_upper_limit => deta_upper_limit, deta_lower_limit => deta_lower_limit, dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
-                        dr_upper_limit => dr_upper_limit, dr_lower_limit => dr_lower_limit, mass_upper_limit => mass_upper_limit, mass_lower_limit => mass_lower_limit,
-                        mass_div_dr_upper_limit => mass_div_dr_upper_limit, mass_div_dr_lower_limit => mass_div_dr_lower_limit, tbpt_threshold => tbpt_threshold,
-                        mass_width => MU_MU_MASS_VECTOR_WIDTH, mass_div_dr_width => MU_MU_MASS_DIV_DR_VECTOR_WIDTH, tbpt_width => MU_MU_TBPT_VECTOR_WIDTH
-                    )
-                    port map(
-                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_div_dr => mass_div_dr(i,j), mass_trv => mass_trv(i,j), tbpt => tbpt(i,j),
-                        deta_comp => deta_comp(i,j), dphi_comp => dphi_comp(i,j), dr_comp => dr_comp(i,j), mass_inv_comp => mass_inv_comp(i,j),
-                        mass_div_dr_comp => mass_div_dr_comp_pipe(i,j), mass_trv_comp => mass_trv_comp(i,j), twobody_pt_comp => tbpt_comp(i,j)
-                    );
+    cuts_l_1: for i in calo1_object_low to calo1_object_high generate 
+        cuts_l_2: for j in muon2_object_low to muon2_object_high generate
+            comp_i: entity work.cuts_comp
+                generic map(
+                    deta_cut => deta_cut, dphi_cut => dphi_cut, dr_cut => dr_cut, mass_cut => mass_cut, mass_type => mass_type, twobody_pt_cut => twobody_pt_cut,
+                    deta_upper_limit => deta_upper_limit, deta_lower_limit => deta_lower_limit, dphi_upper_limit => dphi_upper_limit, dphi_lower_limit => dphi_lower_limit,
+                    dr_upper_limit => dr_upper_limit, dr_lower_limit => dr_lower_limit, mass_upper_limit => mass_upper_limit, mass_lower_limit => mass_lower_limit,
+                    mass_div_dr_upper_limit => mass_div_dr_upper_limit, mass_div_dr_lower_limit => mass_div_dr_lower_limit, tbpt_threshold => tbpt_threshold,
+                    mass_width => mass_width, mass_div_dr_width => mass_div_dr_width, tbpt_width => tbpt_width
+                )
+                port map(
+                    deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_div_dr => mass_div_dr(i,j), mass_trv => mass_trv(i,j), tbpt => tbpt(i,j),
+                    deta_comp => deta_comp(i,j), dphi_comp => dphi_comp(i,j), dr_comp => dr_comp(i,j), mass_inv_comp => mass_inv_comp(i,j),
+                    mass_div_dr_comp => mass_div_dr_comp_pipe(i,j), mass_trv_comp => mass_trv_comp(i,j), twobody_pt_comp => tbpt_comp(i,j)
+                );
         end generate cuts_l_2;
     end generate cuts_l_1;
     
