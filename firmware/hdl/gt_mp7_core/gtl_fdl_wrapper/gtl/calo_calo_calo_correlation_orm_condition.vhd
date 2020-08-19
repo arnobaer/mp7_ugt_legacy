@@ -127,13 +127,13 @@ entity calo_calo_calo_correlation_orm_condition is
         dr_lower_limit: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
         mass_cut: boolean := false;
-        mass_type : natural;
-        mass_width: positive := 56;
+        mass_type : natural := INVARIANT_MASS_TYPE;
+        mass_width: positive := MAX_WIDTH_MASS_LIMIT_VECTOR;
         mass_upper_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
         mass_lower_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
         twobody_pt_cut: boolean := false;
-        tbpt_width: positive := 50;
+        tbpt_width: positive := MAX_WIDTH_TBPT_LIMIT_VECTOR;
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
 
     );

@@ -114,7 +114,7 @@ entity muon_muon_mass_3_obj_condition is
         mass_upper_limit_vector: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
         mass_lower_limit_vector: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        mass_width: positive := 56
+        mass_width: positive := MAX_WIDTH_MASS_LIMIT_VECTOR
 
     );
     port(

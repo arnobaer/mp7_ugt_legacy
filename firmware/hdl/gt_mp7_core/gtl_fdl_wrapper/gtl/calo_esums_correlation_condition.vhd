@@ -66,13 +66,13 @@ entity calo_esums_correlation_condition is
         dphi_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
         dphi_lower_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        mass_cut: boolean;
-        mass_width: positive := 56;
+        mass_cut: boolean := false;
+        mass_width: positive := MAX_WIDTH_MASS_LIMIT_VECTOR;
         mass_upper_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
         mass_lower_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        twobody_pt_cut: boolean;
-        tbpt_width: positive := 50;
+        twobody_pt_cut: boolean := false;
+        tbpt_width: positive := MAX_WIDTH_TBPT_LIMIT_VECTOR;
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
         
     );
