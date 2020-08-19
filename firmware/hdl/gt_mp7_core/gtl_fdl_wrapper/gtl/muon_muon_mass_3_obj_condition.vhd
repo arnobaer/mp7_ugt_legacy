@@ -3,6 +3,7 @@
 -- Condition for invariant mass with 3 muon objects.
 
 -- Version history:
+-- HB 2020-08-19: bug fix isolation LUT default value.
 -- HB 2020-08-14: reordered generic, added default values.
 -- HB 2020-07-02: changed for new cuts structure (calculation outside of conditions). New name.
 -- HB 2020-04-27: reverted to former version.
@@ -43,12 +44,12 @@ entity muon_muon_mass_3_obj_condition is
         phi_w2_upper_limit_muon1: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_muon1: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         requested_charge_muon1: string(1 to 3) := "ign";
-        qual_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '0');
-        iso_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '0');
+        qual_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '1');
+        iso_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '1');
         upt_cut_muon1 : boolean := false;
         upt_upper_limit_muon1: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         upt_lower_limit_muon1: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        ip_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '0');
+        ip_lut_muon1: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '1');
 
         muon2_object_low: natural := 0;
         muon2_object_high: natural := 7;
@@ -72,12 +73,12 @@ entity muon_muon_mass_3_obj_condition is
         phi_w2_upper_limit_muon2: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_muon2: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         requested_charge_muon2: string(1 to 3) := "ign";
-        qual_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '0');
-        iso_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '0');
+        qual_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '1');
+        iso_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '1');
         upt_cut_muon2 : boolean := false;
         upt_upper_limit_muon2: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         upt_lower_limit_muon2: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        ip_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '0');
+        ip_lut_muon2: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '1');
 
         muon3_object_low: natural := 0;
         muon3_object_high: natural := 7;
@@ -101,12 +102,12 @@ entity muon_muon_mass_3_obj_condition is
         phi_w2_upper_limit_muon3: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_muon3: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         requested_charge_muon3: string(1 to 3) := "ign";
-        qual_lut_muon3: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '0');
-        iso_lut_muon3: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '0');
+        qual_lut_muon3: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '1');
+        iso_lut_muon3: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '1');
         upt_cut_muon3 : boolean := false;
         upt_upper_limit_muon3: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         upt_lower_limit_muon3: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        ip_lut_muon3: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '0');
+        ip_lut_muon3: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '1');
 
         requested_charge_correlation: string(1 to 2);
 

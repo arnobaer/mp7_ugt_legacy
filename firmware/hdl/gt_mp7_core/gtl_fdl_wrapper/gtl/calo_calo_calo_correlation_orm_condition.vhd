@@ -3,6 +3,7 @@
 -- Correlation Condition module with overlap removal for calorimeter object types (eg, jet and tau). Calo object 3 is used for overlap removal.
 
 -- Version history:
+-- HB 2020-08-19: bug fix isolation LUT default value.
 -- HB 2020-08-14: reordered generic, added default values.
 -- HB 2020-07-02: changed for new cuts structure (calculation outside of conditions).
 -- HB 2020-01-21: inserted port calo2 (bug fix).
@@ -49,7 +50,7 @@ entity calo_calo_calo_correlation_orm_condition is
         phi_w2_ignore_calo1: boolean := true;
         phi_w2_upper_limit_calo1: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo1: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo1: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo1: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
 
         nr_obj_calo2 : natural := 11;        
         calo2_object_low: natural := 0;
@@ -74,7 +75,7 @@ entity calo_calo_calo_correlation_orm_condition is
         phi_w2_ignore_calo2: boolean := true;
         phi_w2_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
 
         nr_obj_calo3 : natural := 12;
         calo3_object_low: natural := 0;
@@ -99,7 +100,7 @@ entity calo_calo_calo_correlation_orm_condition is
         phi_w2_ignore_calo3: boolean := true;
         phi_w2_upper_limit_calo3: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo3: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo3: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo3: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
 
         deta_orm_cut: boolean := false;
         deta_orm_upper_limit: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0) := (others => '0');

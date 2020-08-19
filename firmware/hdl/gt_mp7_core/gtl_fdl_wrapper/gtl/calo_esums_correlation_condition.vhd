@@ -3,6 +3,7 @@
 -- Correlation Condition module for calorimeter object types (eg, jet and tau) and esums (etm, etm_hf and htm).
 
 -- Version history:
+-- HB 2020-08-19: bug fix isolation LUT default value.
 -- HB 2020-08-17: reordered generic, added default values.
 -- HB 2020-07-03: changed for new cuts structure (calculation outside of conditions).
 -- HB 2019-06-17: updated for "five eta cuts".
@@ -49,7 +50,7 @@ entity calo_esums_correlation_condition is
         phi_w2_ignore_calo: boolean := true;
         phi_w2_upper_limit_calo: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
 
         obj_type_esums: natural := ETM_TYPE;
         et_ge_mode_esums: boolean := true;

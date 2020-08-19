@@ -3,6 +3,7 @@
 -- Correlation Condition module for muon and esums (etm and htm).
 
 -- Version history:
+-- HB 2020-08-19: bug fix isolation LUT default value.
 -- HB 2020-07-02: changed for new cuts structure (calculation outside of conditions).
 -- HB 2020-06-09: implemented new muon structure with "unconstraint pt" and "impact parameter".
 -- HB 2019-06-17: updated for "five eta cuts".
@@ -48,12 +49,12 @@ entity muon_esums_correlation_condition is
         phi_w2_upper_limit_muon: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_muon: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         requested_charge_muon: string(1 to 3) := "ign";
-        qual_lut_muon: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '0');
-        iso_lut_muon: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '0');
+        qual_lut_muon: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '1');
+        iso_lut_muon: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '1');
         upt_cut_muon : boolean := false;
         upt_upper_limit_muon: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
         upt_lower_limit_muon: std_logic_vector(MAX_MUON_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        ip_lut_muon: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '0');
+        ip_lut_muon: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '1');
 
         et_ge_mode_esums: boolean := true;
         obj_type_esums: natural := ETM_TYPE;

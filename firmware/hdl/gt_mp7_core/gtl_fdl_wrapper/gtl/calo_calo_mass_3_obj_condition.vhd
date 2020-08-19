@@ -3,6 +3,7 @@
 -- Condition for invariant mass with 3 calo objects.
 
 -- Version history:
+-- HB 2020-08-19: bug fix isolation LUT default value.
 -- HB 2020-08-14: reordered generic, added default values.
 -- HB 2020-07-02: changed for new cuts structure (calculation outside of conditions). New name.
 -- HB 2020-04-27: reverted to former version.
@@ -45,7 +46,7 @@ entity calo_calo_mass_3_obj_condition is
         phi_w2_ignore_calo1: boolean := true;
         phi_w2_upper_limit_calo1: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo1: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo1: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo1: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
 
         calo2_object_low: natural := 0;
         calo2_object_high: natural := 11;
@@ -68,7 +69,7 @@ entity calo_calo_mass_3_obj_condition is
         phi_w2_ignore_calo2: boolean := true;
         phi_w2_upper_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo2: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
 
         calo3_object_low: natural := 0;
         calo3_object_high: natural := 11;
@@ -91,7 +92,7 @@ entity calo_calo_mass_3_obj_condition is
         phi_w2_ignore_calo3: boolean := true;
         phi_w2_upper_limit_calo3: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_calo3: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        iso_lut_calo3: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '0');
+        iso_lut_calo3: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
 
         mass_upper_limit_vector: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
         mass_lower_limit_vector: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
