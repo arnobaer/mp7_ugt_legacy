@@ -3,6 +3,7 @@
 -- Collection of cuts comparators for correlations
 
 -- Version history:
+-- HB 2020-08-20: cleaned up.
 -- HB 2020-08-10: inserted twobody unconstraint pt.
 -- HB 2020-08-07: inserted invariant mass for unconstraint pt.
 -- HB 2020-06-03: first design.
@@ -87,24 +88,6 @@ architecture rtl of cuts_comp is
     
 begin
 
---     deta_upper_limit_t <= deta_upper_limit(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
---     deta_lower_limit_t <= deta_lower_limit(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
---     
---     dphi_upper_limit_t <= dphi_upper_limit(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
---     dphi_lower_limit_t <= dphi_lower_limit(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
---     
---     dr_upper_limit_t <= dr_upper_limit(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
---     dr_lower_limit_t <= dr_lower_limit(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
---     
---     mass_upper_limit_t <= mass_upper_limit(mass_width-1 downto 0);
---     mass_lower_limit_t <= mass_lower_limit(mass_width-1 downto 0);
---     
---     mass_div_dr_upper_limit_t <= mass_div_dr_upper_limit(mass_div_dr_width-1 downto 0);
---     mass_div_dr_lower_limit_t <= mass_div_dr_lower_limit(mass_div_dr_width-1 downto 0);
---     
---     tbpt_threshold_t <= tbpt_threshold(tbpt_width-1 downto 0);
---     tbupt_threshold_t <= tbupt_threshold(tbupt_width-1 downto 0);
-    
     -- DETA
     deta_i: if deta_cut = true generate
         deta_upper_limit_t <= deta_upper_limit(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
