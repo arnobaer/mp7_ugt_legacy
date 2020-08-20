@@ -3,6 +3,7 @@
 -- Condition module for muon objects conditions with "overlap removal (orm)".
 
 -- Version history:
+-- HB 2020-08-20: inserted new comparator for overlap removal and twobody pt cuts.
 -- HB 2019-10-16: first design.
 
 library ieee;
@@ -79,11 +80,11 @@ entity muon_conditions_orm is
         phi_w2_lower_limit_calo: std_logic_vector(MAX_CALO_TEMPLATES_BITS-1 downto 0);
         iso_lut_calo: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0);
 
-        diff_eta_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
-        diff_eta_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        deta_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        deta_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
 
-        diff_phi_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
-        diff_phi_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        dphi_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
+        dphi_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DETA_DPHI_LIMIT_VECTOR-1 downto 0);
 
         dr_orm_upper_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0);
         dr_orm_lower_limit_vector: std_logic_vector(MAX_WIDTH_DR_LIMIT_VECTOR-1 downto 0);
@@ -98,8 +99,8 @@ entity muon_conditions_orm is
         clk: in std_logic;
         muon: in muon_objects_array;
         calo: in calo_objects_array;
-        diff_eta_orm: in deta_dphi_vector_array;
-        diff_phi_orm: in deta_dphi_vector_array;
+        deta_orm: in deta_dphi_vector_array;
+        dphi_orm: in deta_dphi_vector_array;
         condition_o: out std_logic;
         ls_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
         os_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
@@ -131,8 +132,8 @@ architecture rtl of muon_conditions_orm is
     signal muon_obj_slice_3_vs_templ, muon_obj_slice_3_vs_templ_pipe  : object_slice_3_vs_template_array(muon_object_slice_3_low to muon_object_slice_3_high, 1 to 1);
     signal muon_obj_slice_4_vs_templ, muon_obj_slice_4_vs_templ_pipe  : object_slice_4_vs_template_array(muon_object_slice_4_low to muon_object_slice_4_high, 1 to 1);
     
-    signal diff_eta_orm_comp, diff_eta_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo_object_low to calo_object_high) := (others => (others => '0'));
-    signal diff_phi_orm_comp, diff_phi_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo_object_low to calo_object_high) := (others => (others => '0'));
+    signal deta_orm_comp, deta_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo_object_low to calo_object_high) := (others => (others => '0'));
+    signal dphi_orm_comp, dphi_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo_object_low to calo_object_high) := (others => (others => '0'));
     signal dr_orm_comp, dr_orm_comp_pipe : std_logic_2dim_array(0 to MAX_CALO_OBJECTS-1, calo_object_low to calo_object_high) := (others => (others => '0'));
     signal calo_obj_vs_templ, calo_obj_vs_templ_pipe : std_logic_2dim_array(calo_object_low to calo_object_high, 1 to 1) := (others => (others => '0'));
 
@@ -171,32 +172,43 @@ architecture rtl of muon_conditions_orm is
 
 begin
 
---     assert_i: if nr_templates = 4 generate 
---     -- HB 2017-09-07: max. 7 calo1 objects are allowed for quad condition, because of length of obj_vs_templ_vec
---         assert (nr_objects_slice_1_int < 8 and nr_objects_slice_2_int < 8 and nr_objects_slice_3_int < 8 and nr_objects_slice_4_int < 8) report 
---             "number of objects to high for quad condition: max. 7 calo1 objects per slice allowed"
---         severity failure;
---     end generate;
-
--- Instantiation of two-body pt cut.
-    twobody_pt_cut_i: if twobody_pt_cut = true and nr_templates = 2 generate
-        twobody_pt_i: entity work.twobody_pt
-            generic map(
-                muon_object_slice_1_low, muon_object_slice_1_high,
-                muon_object_slice_2_low, muon_object_slice_2_high,
-                nr_templates,
-                
-                twobody_pt_cut,
-                pt_width, 
-                pt_sq_threshold_vector,
-                sin_cos_width,
-                pt_sq_sin_cos_precision
-            )
-            port map(
-                pt, cos_phi_integer, sin_phi_integer, twobody_pt_comp
-            );
-    end generate twobody_pt_cut_i;
-
+-- Comparison with limits.
+    orm_l_1: for i in 0 to nr_obj_calo1-1 generate 
+        orm_l_2: for j in 0 to nr_obj_calo2-1 generate
+            comp_if: if j>i generate
+                comp_i: entity work.cuts_comp
+                    generic map(
+                        deta_cut => deta_orm_cut, dphi_cut => dphi_orm_cut, dr_cut => dr_orm_cut,
+                        deta_upper_limit => deta_orm_upper_limit, deta_lower_limit => deta_orm_lower_limit, 
+                        dphi_upper_limit => dphi_orm_upper_limit, dphi_lower_limit => dphi_orm_lower_limit,
+                        dr_upper_limit => dr_orm_upper_limit, dr_lower_limit => dr_orm_lower_limit
+                    )
+                    port map(
+                        deta => deta_orm(i,j), dphi => dphi_orm(i,j), dr => dr_orm(i,j),
+                        deta_comp => deta_orm_comp(i,j), dphi_comp => dphi_orm_comp(i,j), dr_comp => dr_orm_comp(i,j)
+                    );
+            end generate comp_if;
+        end generate orm_l_2;
+    end generate orm_l_1;
+    
+    tbpt_sel: if twobody_pt_cut generate
+        tbpt_l_1: for i in 0 to nr_obj_calo1-1 generate 
+            tbpt_l_2: for j in 0 to nr_obj_calo1-1 generate
+                comp_if: if j>i generate
+                    comp_i: entity work.cuts_comp
+                        generic map(
+                            twobody_pt_cut => twobody_pt_cut,
+                            tbpt_width => tbpt_width
+                        )
+                        port map(
+                            tbpt => tbpt(i,j),
+                            twobody_pt_comp => twobody_pt_comp(i,j)
+                        );
+                end generate comp_if;
+            end generate tbpt_l_2;
+        end generate tbpt_l_1;
+    end generate tbpt_sel;
+        
 -- Instantiation of object cuts for muon.
     muon_obj_cuts_i: entity work.muon_obj_cuts
         generic map(
@@ -246,32 +258,8 @@ begin
             );
     end generate calo_obj_l;
 
--- HB 2017-09-05: for optimisation - splitting to different loops with "muon_object_slice_1_low to muon_object_slice_1_high", etc.
-    cuts_orm_l_1: for i in 0 to MAX_CALO_OBJECTS-1 generate 
-        cuts_orm_l_2: for k in calo_object_low to calo_object_high generate
-            deta_orm_cut_i: if deta_orm_cut = true generate
-                diff_eta_orm_comp(i,k) <= '1' when diff_eta_orm(i,k) >= diff_eta_orm_lower_limit_vector and diff_eta_orm(i,k) <= diff_eta_orm_upper_limit_vector else '0';
-            end generate deta_orm_cut_i;
-            dphi_orm_cut_i: if dphi_orm_cut = true generate
-                diff_phi_orm_comp(i,k) <= '1' when diff_phi_orm(i,k) >= diff_phi_orm_lower_limit_vector and diff_phi_orm(i,k) <= diff_phi_orm_upper_limit_vector else '0';
-            end generate dphi_orm_cut_i;
-            dr_orm_cut_i: if dr_orm_cut = true generate
-                dr_calculator_i: entity work.dr_calculator
-                    generic map(
-                        upper_limit_vector => dr_orm_upper_limit_vector,
-                        lower_limit_vector => dr_orm_lower_limit_vector
-                    )
-                    port map(
-                        diff_eta => diff_eta_orm(i,k),
-                        diff_phi => diff_phi_orm(i,k),
-                        dr_comp => dr_orm_comp(i,k)
-                    );
-            end generate dr_orm_cut_i;
-        end generate cuts_orm_l_2;
-    end generate cuts_orm_l_1;
-
 -- Pipeline stage for obj_vs_templ
-    obj_vs_templ_pipeline_p: process(clk, muon_obj_slice_1_vs_templ, muon_obj_slice_2_vs_templ, muon_obj_slice_3_vs_templ, muon_obj_slice_4_vs_templ, calo_obj_vs_templ,           diff_eta_orm_comp, diff_phi_orm_comp, dr_orm_comp)
+    obj_vs_templ_pipeline_p: process(clk, muon_obj_slice_1_vs_templ, muon_obj_slice_2_vs_templ, muon_obj_slice_3_vs_templ, muon_obj_slice_4_vs_templ, calo_obj_vs_templ,           deta_orm_comp, dphi_orm_comp, dr_orm_comp)
     begin
         if obj_vs_templ_pipeline_stage = false then
             muon_obj_slice_1_vs_templ_pipe <= muon_obj_slice_1_vs_templ;
@@ -279,18 +267,20 @@ begin
             muon_obj_slice_3_vs_templ_pipe <= muon_obj_slice_3_vs_templ;
             muon_obj_slice_4_vs_templ_pipe <= muon_obj_slice_4_vs_templ;
             calo_obj_vs_templ_pipe <= calo_obj_vs_templ;
-            diff_eta_orm_comp_pipe <= diff_eta_orm_comp;
-            diff_phi_orm_comp_pipe <= diff_phi_orm_comp;
+            deta_orm_comp_pipe <= deta_orm_comp;
+            dphi_orm_comp_pipe <= dphi_orm_comp;
             dr_orm_comp_pipe <= dr_orm_comp;
+            twobody_pt_comp_pipe <= twobody_pt_comp;
         elsif (clk'event and clk = '1') then
             muon_obj_slice_1_vs_templ_pipe <= muon_obj_slice_1_vs_templ;
             muon_obj_slice_2_vs_templ_pipe <= muon_obj_slice_2_vs_templ;
             muon_obj_slice_3_vs_templ_pipe <= muon_obj_slice_3_vs_templ;
             muon_obj_slice_4_vs_templ_pipe <= muon_obj_slice_4_vs_templ;
             calo_obj_vs_templ_pipe <= calo_obj_vs_templ;
-            diff_eta_orm_comp_pipe <= diff_eta_orm_comp;
-            diff_phi_orm_comp_pipe <= diff_phi_orm_comp;
+            deta_orm_comp_pipe <= deta_orm_comp;
+            dphi_orm_comp_pipe <= dphi_orm_comp;
             dr_orm_comp_pipe <= dr_orm_comp;
+            twobody_pt_comp_pipe <= twobody_pt_comp;
         end if;
     end process;
 
@@ -327,7 +317,7 @@ begin
             muon_obj_slice_1_vs_templ_pipe, muon_obj_slice_2_vs_templ_pipe, muon_obj_slice_3_vs_templ_pipe, muon_obj_slice_4_vs_templ_pipe, 
             calo_obj_vs_templ_pipe,
             charge_comp_double_pipe, charge_comp_triple_pipe, charge_comp_quad_pipe, twobody_pt_comp_pipe, 
-            diff_eta_orm_comp_pipe, diff_phi_orm_comp_pipe, dr_orm_comp_pipe,
+            deta_orm_comp_pipe, dphi_orm_comp_pipe, dr_orm_comp_pipe,
             condition_o
         );
 

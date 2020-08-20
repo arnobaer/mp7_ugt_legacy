@@ -28,7 +28,6 @@ src gt_mp7_core/gtl_fdl_wrapper/fdl/update_process.vhd
 src gt_mp7_core/gtl_fdl_wrapper/fdl/pulse_converter.vhd
 src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_slice.vhd
 #
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r_lut_pkg.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/p_m_2_bx_pipeline.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/eta_comp_signed.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/eta_windows_comp.vhd
@@ -57,13 +56,9 @@ src gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r_calc.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/min_bias_hf_conditions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/towercount_condition.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/tbpt_calc.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/twobody_pt_calculator.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/twobody_pt.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/mass_calculator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/mass_invariant_calc.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/mass_transverse_calc.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/mass_invariant_div_dr_calc.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/cuts_instances.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/cuts_comp.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/calo_calo_correlation_condition.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/calo_muon_correlation_condition.vhd
