@@ -57,7 +57,7 @@ entity calo_conditions is
         iso_luts: calo_templates_iso_array := (others => X"F");
         
         twobody_pt_cut: boolean := false;
-        tbpt_width: positive := 50;
+        tbpt_width: positive := MAX_WIDTH_TBPT_LIMIT_VECTOR;
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0')
     );
     port(

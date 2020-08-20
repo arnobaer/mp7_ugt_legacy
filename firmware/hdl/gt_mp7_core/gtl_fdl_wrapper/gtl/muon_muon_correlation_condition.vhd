@@ -3,6 +3,7 @@
 -- Correlation Condition module for muon objects.
 
 -- Version history:
+-- HB 2020-08-20: removed option for transverse mass.
 -- HB 2020-08-19: bug fix isolation LUT default value.
 -- HB 2020-08-14: reordered generic, added default values.
 -- HB 2020-08-10: inserted twobody unconstraint pt.
@@ -138,7 +139,6 @@ entity muon_muon_correlation_condition is
         dr : in delta_r_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         mass_inv : in mass_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         mass_inv_upt : in mass_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
-        mass_trv : in mass_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         mass_div_dr : in mass_div_dr_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
         tbpt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
 --         tbupt : in tbpt_vector_array(0 to NR_MU_OBJECTS-1, 0 to NR_MU_OBJECTS-1) := (others => (others => (others => '0')));
@@ -173,8 +173,6 @@ architecture rtl of muon_muon_correlation_condition is
     (others => (others => '1'));
     signal mass_inv_upt_comp_t, mass_inv_upt_comp, mass_inv_upt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
     (others => (others => '1'));
-    signal mass_trv_comp_t, mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
-    (others => (others => '1'));
     signal mass_div_dr_comp_t, mass_div_dr_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
     (others => (others => '1'));
     signal tbpt_comp_t, tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
@@ -199,10 +197,9 @@ begin
                         mass_width => mass_width, mass_div_dr_width => mass_div_dr_width, tbpt_width => tbpt_width
                     )
                     port map(
-                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_trv => mass_trv(i,j),
-                        mass_div_dr => mass_div_dr(i,j), tbpt => tbpt(i,j),
+                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_div_dr => mass_div_dr(i,j), tbpt => tbpt(i,j),
                         deta_comp => deta_comp_t(i,j), dphi_comp => dphi_comp_t(i,j), dr_comp => dr_comp_t(i,j), mass_inv_comp => mass_inv_comp_t(i,j), 
-                        mass_inv_upt_comp => mass_inv_upt_comp_t(i,j), mass_div_dr_comp => mass_div_dr_comp_t(i,j), mass_trv_comp => mass_trv_comp_t(i,j), twobody_pt_comp => tbpt_comp_t(i,j)
+                        mass_inv_upt_comp => mass_inv_upt_comp_t(i,j), mass_div_dr_comp => mass_div_dr_comp_t(i,j), twobody_pt_comp => tbpt_comp_t(i,j)
                     );
                 deta_comp(i,j) <= deta_comp_t(i,j);
                 deta_comp(j,i) <= deta_comp_t(i,j);
@@ -214,8 +211,6 @@ begin
                 mass_inv_comp(j,i) <= mass_inv_comp_t(i,j);
                 mass_inv_upt_comp(i,j) <= mass_inv_upt_comp_t(i,j);
                 mass_inv_upt_comp(j,i) <= mass_inv_upt_comp_t(i,j);
-                mass_trv_comp(i,j) <= mass_trv_comp_t(i,j);
-                mass_trv_comp(j,i) <= mass_trv_comp_t(i,j);                
                 mass_div_dr_comp_pipe(i,j) <= mass_div_dr_comp_t(i,j);
                 mass_div_dr_comp_pipe(j,i) <= mass_div_dr_comp_t(i,j);
                 tbpt_comp(i,j) <= tbpt_comp_t(i,j);
@@ -233,10 +228,9 @@ begin
                         mass_width => MU_MU_MASS_VECTOR_WIDTH, mass_div_dr_width => MU_MU_MASS_DIV_DR_VECTOR_WIDTH, tbpt_width => MU_MU_TBPT_VECTOR_WIDTH
                     )
                     port map(
-                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_trv => mass_trv(i,j),
-                        mass_div_dr => mass_div_dr(i,j), tbpt => tbpt(i,j),
+                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_inv_upt => mass_inv_upt(i,j), mass_div_dr => mass_div_dr(i,j), tbpt => tbpt(i,j),
                         deta_comp => deta_comp(i,j), dphi_comp => dphi_comp(i,j), dr_comp => dr_comp(i,j), mass_inv_comp => mass_inv_comp(i,j), 
-                        mass_inv_upt_comp => mass_inv_upt_comp(i,j), mass_div_dr_comp => mass_div_dr_comp_pipe(i,j), mass_trv_comp => mass_trv_comp(i,j), twobody_pt_comp => tbpt_comp(i,j)
+                        mass_inv_upt_comp => mass_inv_upt_comp(i,j), mass_div_dr_comp => mass_div_dr_comp_pipe(i,j),twobody_pt_comp => tbpt_comp(i,j)
                     );
             end generate not_same_i;
         end generate cuts_l_2;
@@ -274,7 +268,6 @@ begin
             dr_comp_pipe <= dr_comp;
             mass_inv_comp_pipe <= mass_inv_comp;
             mass_inv_upt_comp_pipe <= mass_inv_upt_comp;
-            mass_trv_comp_pipe <= mass_trv_comp;
             tbpt_comp_pipe <= tbpt_comp;
 --             tbupt_comp_pipe <= tbupt_comp;
             charge_comp_double_pipe <= charge_comp_double;
@@ -357,7 +350,7 @@ begin
     end process;
 
     -- "Matrix" of permutations in an and-or-structure.
-    matrix_p: process(muon1_obj_vs_templ_pipe, muon2_obj_vs_templ_pipe, charge_comp_double_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_inv_upt_comp_pipe, mass_trv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
+    matrix_p: process(muon1_obj_vs_templ_pipe, muon2_obj_vs_templ_pipe, charge_comp_double_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_inv_upt_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
         variable index : integer := 0;
         variable obj_vs_templ_vec : std_logic_vector((muon1_object_high-muon1_object_low+1)*(muon2_object_high-muon2_object_low+1) downto 1) := (others => '0');
         variable condition_and_or_tmp : std_logic := '0';
@@ -370,11 +363,11 @@ begin
                 if same_bx = true then
                     if j/=i then
                         index := index + 1;
-                        obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                        obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
                     end if;
                 else
                     index := index + 1;
-                    obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                    obj_vs_templ_vec(index) := muon1_obj_vs_templ_pipe(i,1) and muon2_obj_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
                 end if;
             end loop;
         end loop;

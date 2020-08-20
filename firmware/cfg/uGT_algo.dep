@@ -51,7 +51,6 @@ src gt_mp7_core/gtl_fdl_wrapper/gtl/muon_cond_matrix_orm.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/muon_conditions_orm.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/esums_comparators.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/esums_conditions.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/dr_calculator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r_calc.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/min_bias_hf_conditions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/towercount_condition.vhd

@@ -3,6 +3,7 @@
 -- Correlation Condition module for two calorimeter object types (eg, jet and tau).
 
 -- Version history:
+-- HB 2020-08-20: removed option for transverse mass.
 -- HB 2020-08-19: bug fix isolation LUT default value.
 -- HB 2020-08-14: reordered generic, added default values.
 -- HB 2020-07-02: changed for new cuts structure (calculation outside of conditions).
@@ -121,7 +122,6 @@ entity calo_calo_correlation_condition is
         dphi : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
         dr : in delta_r_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
         mass_inv : in mass_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
-        mass_trv : in mass_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
         mass_div_dr : in mass_div_dr_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
         tbpt : in tbpt_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
         condition_o: out std_logic
@@ -147,8 +147,6 @@ architecture rtl of calo_calo_correlation_condition is
     (others => (others => '1'));
     signal mass_inv_comp_t, mass_inv_comp, mass_inv_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
-    signal mass_trv_comp_t, mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
-    (others => (others => '1'));
     signal mass_div_dr_comp_t, mass_div_dr_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
     (others => (others => '1'));
     signal tbpt_comp_t, tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) :=
@@ -173,9 +171,9 @@ begin
                         mass_width => mass_width, mass_div_dr_width => mass_div_dr_width, tbpt_width => tbpt_width
                     )
                     port map(
-                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_div_dr => mass_div_dr(i,j), mass_trv => mass_trv(i,j), tbpt => tbpt(i,j),
+                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_div_dr => mass_div_dr(i,j), tbpt => tbpt(i,j),
                         deta_comp => deta_comp_t(i,j), dphi_comp => dphi_comp_t(i,j), dr_comp => dr_comp_t(i,j), mass_inv_comp => mass_inv_comp_t(i,j),
-                        mass_div_dr_comp => mass_div_dr_comp_t(i,j), mass_trv_comp => mass_trv_comp_t(i,j), twobody_pt_comp => tbpt_comp_t(i,j)
+                        mass_div_dr_comp => mass_div_dr_comp_t(i,j), twobody_pt_comp => tbpt_comp_t(i,j)
                     );
                 deta_comp(i,j) <= deta_comp_t(i,j);
                 deta_comp(j,i) <= deta_comp_t(i,j);
@@ -185,8 +183,6 @@ begin
                 dr_comp(j,i) <= dr_comp_t(i,j);
                 mass_inv_comp(i,j) <= mass_inv_comp_t(i,j);
                 mass_inv_comp(j,i) <= mass_inv_comp_t(i,j);
-                mass_trv_comp(i,j) <= mass_trv_comp_t(i,j);
-                mass_trv_comp(j,i) <= mass_trv_comp_t(i,j);                
                 mass_div_dr_comp_pipe(i,j) <= mass_div_dr_comp_t(i,j);
                 mass_div_dr_comp_pipe(j,i) <= mass_div_dr_comp_t(i,j);
                 tbpt_comp(i,j) <= tbpt_comp_t(i,j);
@@ -202,9 +198,9 @@ begin
                         mass_width => mass_width, mass_div_dr_width => mass_div_dr_width, tbpt_width => tbpt_width
                     )
                     port map(
-                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_div_dr => mass_div_dr(i,j), mass_trv => mass_trv(i,j), tbpt => tbpt(i,j),
+                        deta => deta(i,j), dphi => dphi(i,j), dr => dr(i,j), mass_inv => mass_inv(i,j), mass_div_dr => mass_div_dr(i,j),tbpt => tbpt(i,j),
                         deta_comp => deta_comp(i,j), dphi_comp => dphi_comp(i,j), dr_comp => dr_comp(i,j), mass_inv_comp => mass_inv_comp(i,j),
-                        mass_div_dr_comp => mass_div_dr_comp_pipe(i,j), mass_trv_comp => mass_trv_comp(i,j), twobody_pt_comp => tbpt_comp(i,j)
+                        mass_div_dr_comp => mass_div_dr_comp_pipe(i,j), twobody_pt_comp => tbpt_comp(i,j)
                     );
             end generate differ_i;
         end generate cuts_l_2;
@@ -220,7 +216,6 @@ begin
             dphi_comp_pipe <= dphi_comp;
             dr_comp_pipe <= dr_comp;
             mass_inv_comp_pipe <= mass_inv_comp;
-            mass_trv_comp_pipe <= mass_trv_comp;
 -- mass_div_dr_comp_pipe: 1 bx pipeline done with ROMs for LUTs of inv_dr_sq values in mass_div_dr_comp.vhd
             tbpt_comp_pipe <= tbpt_comp;
         end if;
@@ -292,7 +287,7 @@ begin
 
     -- "Matrix" of permutations in an and-or-structure.
 
-    matrix_p: process(calo1_obj_vs_templ_pipe, calo2_obj_vs_templ_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_trv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
+    matrix_p: process(calo1_obj_vs_templ_pipe, calo2_obj_vs_templ_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
         variable index : integer := 0;
         variable obj_vs_templ_vec : std_logic_vector(((calo1_object_high-calo1_object_low+1)*(calo2_object_high-calo2_object_low+1)) downto 1) := (others => '0');
         variable condition_and_or_tmp : std_logic := '0';
@@ -305,11 +300,11 @@ begin
                 if (obj_type_calo1 = obj_type_calo2) and same_bx then
                     if j/=i then
                         index := index + 1;
-                        obj_vs_templ_vec(index) := calo1_obj_vs_templ_pipe(i,1) and calo2_obj_vs_templ_pipe(j,1) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                        obj_vs_templ_vec(index) := calo1_obj_vs_templ_pipe(i,1) and calo2_obj_vs_templ_pipe(j,1) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
                     end if;
                 else
                     index := index + 1;
-                    obj_vs_templ_vec(index) := calo1_obj_vs_templ_pipe(i,1) and calo2_obj_vs_templ_pipe(j,1) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_trv_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                    obj_vs_templ_vec(index) := calo1_obj_vs_templ_pipe(i,1) and calo2_obj_vs_templ_pipe(j,1) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
                 end if;
             end loop;
         end loop;
