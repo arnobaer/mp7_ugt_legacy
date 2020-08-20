@@ -98,18 +98,17 @@ entity muon_conditions_orm is
         clk: in std_logic;
         muon: in muon_objects_array;
         calo: in calo_objects_array;
-        deta_orm: in deta_dphi_vector_array;
-        dphi_orm: in deta_dphi_vector_array;
-        condition_o: out std_logic;
         ls_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
         os_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
         ls_charcorr_triple: in muon_charcorr_triple_array := (others => (others => (others => '0')));
         os_charcorr_triple: in muon_charcorr_triple_array := (others => (others => (others => '0')));
         ls_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
         os_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
-        pt : in diff_inputs_array(0 to MAX_CALO_OBJECTS-1) := (others => (others => '0'));
-        cos_phi_integer : in sin_cos_integer_array(0 to MAX_CALO_OBJECTS-1) := (others => 0);
-        sin_phi_integer : in sin_cos_integer_array(0 to MAX_CALO_OBJECTS-1) := (others => 0)
+        deta_orm : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        dphi_orm : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        dr_orm: in delta_r_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
+        tbpt : in tbpt_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo1-1) := (others => (others => (others => '0')));
+        condition_o: out std_logic
     );
 end muon_conditions_orm;
 
