@@ -104,10 +104,10 @@ entity muon_conditions_orm is
         os_charcorr_triple: in muon_charcorr_triple_array := (others => (others => (others => '0')));
         ls_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
         os_charcorr_quad: in muon_charcorr_quad_array := (others => (others => (others => (others => '0'))));
-        deta_orm : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
-        dphi_orm : in deta_dphi_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
-        dr_orm: in delta_r_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo2-1) := (others => (others => (others => '0')));
-        tbpt : in tbpt_vector_array(0 to nr_obj_calo1-1, 0 to nr_obj_calo1-1) := (others => (others => (others => '0')));
+        deta_orm : in deta_dphi_vector_array(0 to NR_MUON_OBJECTS-1, 0 to nr_obj_calo-1) := (others => (others => (others => '0')));
+        dphi_orm : in deta_dphi_vector_array(0 to NR_MUON_OBJECTS-1, 0 to nr_obj_calo-1) := (others => (others => (others => '0')));
+        dr_orm: in delta_r_vector_array(0 to NR_MUON_OBJECTS-1, 0 to nr_obj_calo-1) := (others => (others => (others => '0')));
+        tbpt : in tbpt_vector_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) := (others => (others => (others => '0')));
         condition_o: out std_logic
     );
 end muon_conditions_orm;
