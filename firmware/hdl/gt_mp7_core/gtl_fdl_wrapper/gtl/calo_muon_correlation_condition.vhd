@@ -172,7 +172,7 @@ begin
     end generate cuts_l_1;
     
 -- Pipeline stage for charge correlation comparison
-    cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_trv_comp, tbpt_comp)
+    cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp,tbpt_comp)
         begin
         if (lhc_clk'event and lhc_clk = '1') then
             deta_comp_pipe <= deta_comp;
