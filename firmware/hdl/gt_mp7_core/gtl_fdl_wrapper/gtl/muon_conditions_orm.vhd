@@ -56,6 +56,7 @@ entity muon_conditions_orm is
         ip_luts_muon: muon_templates_ip_array;
         requested_charge_correlation: string(1 to 2);
 
+        nr_obj_calo: natural := NR_EG_OBJECTS;        
         calo_object_low: natural;
         calo_object_high: natural;
         et_ge_mode_calo: boolean;
@@ -173,8 +174,8 @@ architecture rtl of muon_conditions_orm is
 begin
 
 -- Comparison with limits.
-    orm_l_1: for i in 0 to nr_obj_calo1-1 generate 
-        orm_l_2: for j in 0 to nr_obj_calo2-1 generate
+    orm_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
+        orm_l_2: for j in 0 to nr_obj_calo-1 generate
             comp_if: if j>i generate
                 comp_i: entity work.cuts_comp
                     generic map(
@@ -192,8 +193,8 @@ begin
     end generate orm_l_1;
     
     tbpt_sel: if twobody_pt_cut generate
-        tbpt_l_1: for i in 0 to nr_obj_calo1-1 generate 
-            tbpt_l_2: for j in 0 to nr_obj_calo1-1 generate
+        tbpt_l_1: for i in 0 to NR_MUON_OBJECTS-1 generate 
+            tbpt_l_2: for j in 0 to NR_MUON_OBJECTS-1 generate
                 comp_if: if j>i generate
                     comp_i: entity work.cuts_comp
                         generic map(
