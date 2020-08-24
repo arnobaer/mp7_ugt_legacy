@@ -3,6 +3,7 @@
 -- Collection of cuts comparators for correlations
 
 -- Version history:
+-- HB 2020-08-24: threshold for mass divided by delta R (instead of lower and upper limit).
 -- HB 2020-08-20: cleaned up.
 -- HB 2020-08-10: inserted twobody unconstraint pt.
 -- HB 2020-08-07: inserted invariant mass for unconstraint pt.
@@ -37,8 +38,7 @@ entity cuts_comp is
         mass_upper_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
         mass_lower_limit: std_logic_vector(MAX_WIDTH_MASS_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
-        mass_div_dr_upper_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
-        mass_div_dr_lower_limit: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
+        mass_div_dr_threshold: std_logic_vector(MAX_WIDTH_MASS_DIV_DR_LIMIT_VECTOR-1 downto 0) := (others => '0');
 
         tbpt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
         tbupt_threshold: std_logic_vector(MAX_WIDTH_TBPT_LIMIT_VECTOR-1 downto 0) := (others => '0');
@@ -81,8 +81,7 @@ architecture rtl of cuts_comp is
     signal dr_lower_limit_t: std_logic_vector(2*DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0) := (others => '0');
     signal mass_upper_limit_t: std_logic_vector(mass_width-1 downto 0) := (others => '0');
     signal mass_lower_limit_t: std_logic_vector(mass_width-1 downto 0) := (others => '0');
-    signal mass_div_dr_upper_limit_t: std_logic_vector(mass_div_dr_width-1 downto 0) := (others => '0');
-    signal mass_div_dr_lower_limit_t: std_logic_vector(mass_div_dr_width-1 downto 0) := (others => '0');
+    signal mass_div_dr_threshold_t: std_logic_vector(mass_div_dr_width-1 downto 0) := (others => '0');
     signal tbpt_threshold_t: std_logic_vector(tbpt_width-1 downto 0) := (others => '0');
     signal tbupt_threshold_t: std_logic_vector(tbupt_width-1 downto 0) := (others => '0');
     
@@ -126,9 +125,8 @@ begin
     end generate mass_trv_i;
     -- MASS DIV DR
     mass_div_dr_i: if mass_cut = true and mass_type = INVARIANT_MASS_DIV_DR_TYPE generate
-        mass_div_dr_upper_limit_t <= mass_div_dr_upper_limit(mass_div_dr_width-1 downto 0);
-        mass_div_dr_lower_limit_t <= mass_div_dr_lower_limit(mass_div_dr_width-1 downto 0);    
-        mass_div_dr_comp <= '1' when mass_div_dr(mass_div_dr_width-1 downto 0) >= mass_div_dr_lower_limit_t and mass_div_dr(mass_div_dr_width-1 downto 0) <= mass_div_dr_upper_limit_t else '0';
+        mass_div_dr_threshold_t <= mass_div_dr_threshold(mass_div_dr_width-1 downto 0);
+        mass_div_dr_comp <= '1' when mass_div_dr(mass_div_dr_width-1 downto 0) >= mass_div_dr_threshold_t else '0';
     end generate mass_div_dr_i;
     -- TWO BODY PT
     tbpt_i: if twobody_pt_cut = true  generate
