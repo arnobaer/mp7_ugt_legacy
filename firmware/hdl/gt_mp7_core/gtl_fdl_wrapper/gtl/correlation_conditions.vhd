@@ -14,12 +14,12 @@ use work.gtl_pkg.all;
 
 entity correlation_conditions is
     generic(
-        same_bx: boolean; 
+        same_bx: boolean := false; 
 
-        nr_obj1 : natural := 12;
+        nr_obj1 : natural := NR_EG_OBJECTS;
         type_obj1: natural := EG_TYPE;
         slice_low_obj1: natural := 0;
-        slice_high_obj1: natural := 12;
+        slice_high_obj1: natural := NR_EG_OBJECTS-1;
         pt_ge_mode_obj1: boolean := true;
         pt_threshold_obj1: std_logic_vector(MAX_TEMPLATES_BITS-1 downto 0) := (others => '0');
         nr_eta_windows_obj1: natural := 0;
@@ -48,10 +48,10 @@ entity correlation_conditions is
         muon_upt_lower_limit_obj1: std_logic_vector(MAX_TEMPLATES_BITS-1 downto 0) := (others => '0');
         muon_ip_lut_obj1: std_logic_vector(2**(D_S_I_MUON_V2.ip_high-D_S_I_MUON_V2.ip_low+1)-1 downto 0) := (others => '1');
 
-        nr_obj2 : natural := 12;
+        nr_obj2 : natural := NR_EG_OBJECTS;
         type_obj2: natural := EG_TYPE;
         slice_low_obj2: natural := 0;
-        slice_high_obj2: natural := 12;
+        slice_high_obj2: natural := NR_EG_OBJECTS-1;
         pt_ge_mode_obj2: boolean := true;
         pt_threshold_obj2: std_logic_vector(MAX_TEMPLATES_BITS-1 downto 0) := (others => '0');
         nr_eta_windows_obj2: natural := 0;
@@ -71,7 +71,7 @@ entity correlation_conditions is
         phi_w2_ignore_obj2: boolean := true;
         phi_w2_upper_limit_obj2: std_logic_vector(MAX_TEMPLATES_BITS-1 downto 0) := (others => '0');
         phi_w2_lower_limit_obj2: std_logic_vector(MAX_TEMPLATES_BITS-1 downto 0) := (others => '0');
-        calo_iso_lut_obj1: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
+        calo_iso_lut_obj2: std_logic_vector(2**MAX_CALO_ISO_BITS-1 downto 0) := (others => '1');
         muon_requested_charge_obj2: string(1 to 3) := "ign";
         muon_qual_lut_obj2: std_logic_vector(2**(D_S_I_MUON_V2.qual_high-D_S_I_MUON_V2.qual_low+1)-1 downto 0) := (others => '1');
         muon_iso_lut_obj2: std_logic_vector(2**(D_S_I_MUON_V2.iso_high-D_S_I_MUON_V2.iso_low+1)-1 downto 0) := (others => '1');
@@ -123,11 +123,11 @@ entity correlation_conditions is
    );
     port(
         lhc_clk: in std_logic;
-        calo1_data_i: in calo_objects_array;
-        calo2_data_i: in calo_objects_array;
-        esums_data_i: in std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        muon1_data_i: in muon_objects_array;
-        muon2_data_i: in muon_objects_array;
+        calo1_data_i: in calo_objects_array(0 to MAX_CALO_OBJECTS-1) := (others => (others => '0'));
+        calo2_data_i: in calo_objects_array(0 to MAX_CALO_OBJECTS-1) := (others => (others => '0'));
+        esums_data_i: in std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+        muon1_data_i: in muon_objects_array(0 to NR_MU_OBJECTS-1) := (others => (others => '0'));
+        muon2_data_i: in muon_objects_array(0 to NR_MU_OBJECTS-1) := (others => (others => '0'));
         ls_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
         os_charcorr_double: in muon_charcorr_double_array := (others => (others => '0'));
         deta : in deta_dphi_vector_array(0 to nr_obj1-1, 0 to nr_obj2-1) := (others => (others => (others => '0')));
@@ -161,21 +161,23 @@ architecture rtl of correlation_conditions is
     signal charge_comp_double_pipe : muon_charcorr_double_array;
 --***************************************************************
 
-    signal deta_comp_t, deta_comp, deta_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal deta_comp_t, deta_comp, deta_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
     (others => (others => '1'));
-    signal dphi_comp_t, dphi_comp, dphi_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal dphi_comp_t, dphi_comp, dphi_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
     (others => (others => '1'));
-    signal dr_comp_t, dr_comp, dr_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal dr_comp_t, dr_comp, dr_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
     (others => (others => '1'));
-    signal mass_inv_comp_t, mass_inv_comp, mass_inv_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal mass_inv_comp_t, mass_inv_comp, mass_inv_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
     (others => (others => '1'));
-    signal mass_inv_upt_comp_t, mass_inv_upt_comp, mass_inv_upt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal mass_inv_upt_comp_t, mass_inv_upt_comp, mass_inv_upt_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
     (others => (others => '1'));
-    signal mass_div_dr_comp_t, mass_div_dr_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal mass_trv_comp, mass_trv_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to 0) :=
     (others => (others => '1'));
-    signal tbpt_comp_t, tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal mass_div_dr_comp_t, mass_div_dr_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
     (others => (others => '1'));
---     signal tbupt_comp_t, tbupt_comp, tbupt_comp_pipe : std_logic_2dim_array(0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) :=
+    signal tbpt_comp_t, tbpt_comp, tbpt_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
+    (others => (others => '1'));
+--     signal tbupt_comp_t, tbupt_comp, tbupt_comp_pipe : std_logic_2dim_array(0 to MAX_NR_OBJECTS-1, 0 to MAX_NR_OBJECTS-1) :=
 --     (others => (others => '1'));
 
     signal condition_and_or : std_logic;
@@ -236,21 +238,21 @@ begin
         end generate cuts_l_1;
         
        -- Charge correlation comparison
-        mu_mu_corr_i: if type_obj1 == MU_TYPE and type_obj2 == MU_TYPE generate
+        mu_mu_corr_i: if (type_obj1 = MU_TYPE) and (type_obj2 = MU_TYPE) generate
             charge_double_l_1: for i in slice_low_obj1 to slice_high_obj1 generate 
                 charge_double_l_2: for j in slice_low_obj2 to slice_high_obj2 generate
                     obj_same_bx_l: if same_bx = true generate
                         charge_double_if: if j/=i generate
-                            charge_comp_double(i,j) <= '1' when ls_charcorr_double(i,j) = '1' and requested_charge_correlation = "ls" else
-                                                    '1' when os_charcorr_double(i,j) = '1' and requested_charge_correlation = "os" else
-                                                    '1' when requested_charge_correlation = "ig" else
+                            charge_comp_double(i,j) <= '1' when ls_charcorr_double(i,j) = '1' and muon_requested_charge_correlation = "ls" else
+                                                    '1' when os_charcorr_double(i,j) = '1' and muon_requested_charge_correlation = "os" else
+                                                    '1' when muon_requested_charge_correlation = "ig" else
                                                     '0';
                         end generate charge_double_if;
                     end generate obj_same_bx_l;
                     obj_different_bx_l: if same_bx = false generate
-                            charge_comp_double(i,j) <= '1' when ls_charcorr_double(i,j) = '1' and requested_charge_correlation = "ls" else
-                                                    '1' when os_charcorr_double(i,j) = '1' and requested_charge_correlation = "os" else
-                                                    '1' when requested_charge_correlation = "ig" else
+                            charge_comp_double(i,j) <= '1' when ls_charcorr_double(i,j) = '1' and muon_requested_charge_correlation = "ls" else
+                                                    '1' when os_charcorr_double(i,j) = '1' and muon_requested_charge_correlation = "os" else
+                                                    '1' when muon_requested_charge_correlation = "ig" else
                                                     '0';
                     end generate obj_different_bx_l;
                 end generate charge_double_l_2;
@@ -258,7 +260,7 @@ begin
         end generate mu_mu_corr_i;
 
         -- Pipeline stage for charge correlation comparison
-        cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_inv_upt_comp, mass_trv_comp, tbpt_comp, charge_comp_double)
+        cuts_pipeline_p: process(lhc_clk, deta_comp, dphi_comp, dr_comp, mass_inv_comp, mass_inv_upt_comp, tbpt_comp, charge_comp_double)
             begin
             if (lhc_clk'event and lhc_clk = '1') then
                 deta_comp_pipe <= deta_comp;
@@ -276,8 +278,8 @@ begin
         obj1_calo_sel_i: if type_obj1 /= MU_TYPE generate
             calo1_obj_l: for i in slice_low_obj1 to slice_high_obj1 generate
                 calo1_comp_i: entity work.calo_comparators
-                    generic map(et_ge_mode_obj1, obj_type_obj1,
-                        et_threshold_obj1,
+                    generic map(pt_ge_mode_obj1, type_obj1,
+                        pt_threshold_obj1,
                         nr_eta_windows_obj1,
                         eta_w1_upper_limit_obj1,
                         eta_w1_lower_limit_obj1,
@@ -295,7 +297,7 @@ begin
                         phi_w2_ignore_obj1,
                         phi_w2_upper_limit_obj1,
                         phi_w2_lower_limit_obj1,
-                        iso_lut_obj1
+                        calo_iso_lut_obj1
                     )
                     port map(calo1_data_i(i), obj1_vs_templ(i,1));
             end generate calo1_obj_l;
@@ -304,8 +306,8 @@ begin
         obj2_calo_sel_i: if type_obj2 /= MU_TYPE generate
             calo2_obj_l: for i in slice_low_obj2 to slice_high_obj2 generate
                 calo2_comp_i: entity work.calo_comparators
-                    generic map(et_ge_mode_obj2, obj_type_obj2,
-                        et_threshold_obj2,
+                    generic map(pt_ge_mode_obj2, type_obj2,
+                        pt_threshold_obj2,
                         nr_eta_windows_obj2,
                         eta_w1_upper_limit_obj2,
                         eta_w1_lower_limit_obj2,
@@ -323,14 +325,14 @@ begin
                         phi_w2_ignore_obj2,
                         phi_w2_upper_limit_obj2,
                         phi_w2_lower_limit_obj2,
-                        iso_lut_obj2
+                        calo_iso_lut_obj2
                     )
                     port map(calo2_data_i(i), obj2_vs_templ(i,1));
             end generate calo2_obj_l;
         end generate obj2_calo_sel_i;
         
         -- Instance of comparators for muon objects.
-        obj1_mu_sel_i: if type_obj1 == MU_TYPE generate
+        obj1_mu_sel_i: if type_obj1 = MU_TYPE generate
             obj_templ1_l: for i in slice_low_obj1 to slice_high_obj1 generate
                 obj_templ1_comp_i: entity work.muon_comparators
                     generic map(pt_ge_mode_obj1,
@@ -352,19 +354,19 @@ begin
                         phi_w2_ignore_obj1,
                         phi_w2_upper_limit_obj1(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
                         phi_w2_lower_limit_obj1(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
-                        requested_charge_obj1,
-                        qual_lut_obj1,
-                        iso_lut_obj1,
-                        upt_cut_obj1,
-                        upt_upper_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
-                        upt_lower_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
-                        ip_lut_obj1
+                        muon_requested_charge_obj1,
+                        muon_qual_lut_obj1,
+                        muon_iso_lut_obj1,
+                        muon_upt_cut_obj1,
+                        muon_upt_upper_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                        muon_upt_lower_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                        muon_ip_lut_obj1
                     )
                     port map(muon1_data_i(i), obj1_vs_templ(i,1));
             end generate obj_templ1_l;
         end generate obj1_mu_sel_i;
 
-        obj2_mu_sel_i: if type_obj2 == MU_TYPE generate
+        obj2_mu_sel_i: if type_obj2 = MU_TYPE generate
             obj_templ2_l_l: for i in slice_low_obj2 to slice_high_obj2 generate
                 obj_templ2_comp_i: entity work.muon_comparators
                     generic map(pt_ge_mode_obj2,
@@ -386,13 +388,13 @@ begin
                         phi_w2_ignore_obj2,
                         phi_w2_upper_limit_obj2(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
                         phi_w2_lower_limit_obj2(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
-                        requested_charge_obj2,
-                        qual_lut_obj2,
-                        iso_lut_obj2,
-                        upt_cut_obj2,
-                        upt_upper_limit_obj2(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
-                        upt_lower_limit_obj2(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
-                        ip_lut_obj2
+                        muon_requested_charge_obj2,
+                        muon_qual_lut_obj2,
+                        muon_iso_lut_obj2,
+                        muon_upt_cut_obj2,
+                        muon_upt_upper_limit_obj2(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                        muon_upt_lower_limit_obj2(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                        muon_ip_lut_obj2
                     )
                     port map(muon2_data_i(i), obj2_vs_templ(i,1));
             end generate obj_templ2_l_l;
@@ -408,7 +410,7 @@ begin
         end process;
 
         -- "Matrix" of permutations in an and-or-structure.
-        matrix_p: process(obj1_vs_templ_pipe, obj2_vs_templ_pipe, charge_comp_double_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_inv_upt_comp_pipe, mass_trv_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
+        matrix_p: process(obj1_vs_templ_pipe, obj2_vs_templ_pipe, charge_comp_double_pipe, deta_comp_pipe, dphi_comp_pipe, dr_comp_pipe, mass_inv_comp_pipe, mass_inv_upt_comp_pipe, mass_div_dr_comp_pipe, tbpt_comp_pipe)
             variable index : integer := 0;
             variable obj_vs_templ_vec : std_logic_vector((slice_high_obj1-slice_low_obj1+1)*(slice_high_obj2-slice_low_obj2+1) downto 1) := (others => '0');
             variable condition_and_or_tmp : std_logic := '0';
@@ -418,16 +420,31 @@ begin
             condition_and_or_tmp := '0';
             for i in slice_low_obj1 to slice_high_obj1 loop 
                 for j in slice_low_obj2 to slice_high_obj2 loop
-                    if same_bx = true then
-                        if j/=i then
+                    if not ((type_obj1 = MU_TYPE) and (type_obj2 = MU_TYPE)) then
+                        if same_bx = true then
+                            if j/=i then
+                                index := index + 1;
+                                obj_vs_templ_vec(index) := obj1_vs_templ_pipe(i,1) and obj2_vs_templ_pipe(j,1) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                            end if;
+                        else
                             index := index + 1;
-                            obj_vs_templ_vec(index) := obj1_vs_templ_pipe(i,1) and obj2_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                            obj_vs_templ_vec(index) := obj1_vs_templ_pipe(i,1) and obj2_vs_templ_pipe(j,1) and deta_comp_pipe(i,j) and 
+                            dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and 
+                            tbpt_comp_pipe(i,j);
                         end if;
-                    else
-                        index := index + 1;
-                        obj_vs_templ_vec(index) := obj1_vs_templ_pipe(i,1) and obj2_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and 
-                        dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and 
-                        tbpt_comp_pipe(i,j);
+                    end if;
+                    if (type_obj1 = MU_TYPE) and (type_obj2 = MU_TYPE) then
+                        if same_bx = true then
+                            if j/=i then
+                                index := index + 1;
+                                obj_vs_templ_vec(index) := obj1_vs_templ_pipe(i,1) and obj2_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and tbpt_comp_pipe(i,j);
+                            end if;
+                        else
+                            index := index + 1;
+                            obj_vs_templ_vec(index) := obj1_vs_templ_pipe(i,1) and obj2_vs_templ_pipe(j,1) and charge_comp_double_pipe(i,j) and deta_comp_pipe(i,j) and 
+                            dphi_comp_pipe(i,j) and dr_comp_pipe(i,j) and mass_inv_comp_pipe(i,j) and mass_inv_upt_comp_pipe(i,j) and mass_div_dr_comp_pipe(i,j) and 
+                            tbpt_comp_pipe(i,j);
+                        end if;
                     end if;
                 end loop;
             end loop;
@@ -466,16 +483,10 @@ begin
         -- Pipeline stage for cut comps
         diff_pipeline_p: process(lhc_clk, dphi_comp, mass_trv_comp, tbpt_comp)
         begin
-            if obj_vs_templ_pipeline_stage = false then
+            if (lhc_clk'event and lhc_clk = '1') then
                 dphi_comp_pipe <= dphi_comp;
                 mass_trv_comp_pipe <= mass_trv_comp;
                 tbpt_comp_pipe <= tbpt_comp;
-            else
-                if (lhc_clk'event and lhc_clk = '1') then
-                    dphi_comp_pipe <= dphi_comp;
-                    mass_trv_comp_pipe <= mass_trv_comp;
-                    tbpt_comp_pipe <= tbpt_comp;
-                end if;
             end if;
         end process;
 
@@ -483,8 +494,8 @@ begin
         obj1_calo_sel_i: if type_obj1 /= MU_TYPE generate
             calo1_obj_l: for i in slice_low_obj1 to slice_high_obj1 generate
                 calo1_comp_i: entity work.calo_comparators
-                    generic map(et_ge_mode_obj1, obj_type_obj1,
-                        et_threshold_obj1,
+                    generic map(pt_ge_mode_obj1, type_obj1,
+                        pt_threshold_obj1,
                         nr_eta_windows_obj1,
                         eta_w1_upper_limit_obj1,
                         eta_w1_lower_limit_obj1,
@@ -502,14 +513,14 @@ begin
                         phi_w2_ignore_obj1,
                         phi_w2_upper_limit_obj1,
                         phi_w2_lower_limit_obj1,
-                        iso_lut_obj1
+                        calo_iso_lut_obj1
                     )
                     port map(calo1_data_i(i), obj1_vs_templ(i,1));
             end generate calo1_obj_l;
         end generate obj1_calo_sel_i;
 
         -- Instance of comparators for muon objects.
-        obj1_mu_sel_i: if type_obj1 == MU_TYPE generate
+        obj1_mu_sel_i: if type_obj1 = MU_TYPE generate
             obj_templ1_l: for i in slice_low_obj1 to slice_high_obj1 generate
                 obj_templ1_comp_i: entity work.muon_comparators
                     generic map(pt_ge_mode_obj1,
@@ -531,13 +542,13 @@ begin
                         phi_w2_ignore_obj1,
                         phi_w2_upper_limit_obj1(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
                         phi_w2_lower_limit_obj1(D_S_I_MUON_V2.phi_high-D_S_I_MUON_V2.phi_low downto 0),
-                        requested_charge_obj1,
-                        qual_lut_obj1,
-                        iso_lut_obj1,
-                        upt_cut_obj1,
-                        upt_upper_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
-                        upt_lower_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
-                        ip_lut_obj1
+                        muon_requested_charge_obj1,
+                        muon_qual_lut_obj1,
+                        muon_iso_lut_obj1,
+                        muon_upt_cut_obj1,
+                        muon_upt_upper_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                        muon_upt_lower_limit_obj1(D_S_I_MUON_V2.upt_high-D_S_I_MUON_V2.upt_low downto 0),
+                        muon_ip_lut_obj1
                     )
                     port map(muon1_data_i(i), obj1_vs_templ(i,1));
             end generate obj_templ1_l;
@@ -563,14 +574,9 @@ begin
         -- Pipeline stage
         obj_vs_templ_pipeline_p: process(lhc_clk, obj1_vs_templ, esums_comp)
         begin
-            if obj_vs_templ_pipeline_stage = false then
+            if (lhc_clk'event and lhc_clk = '1') then
                 obj1_vs_templ_pipe <= obj1_vs_templ;
                 esums_comp_pipe <= esums_comp;
-            else
-                if (lhc_clk'event and lhc_clk = '1') then
-                    obj1_vs_templ_pipe <= obj1_vs_templ;
-                    esums_comp_pipe <= esums_comp;
-                end if;
             end if;
         end process;
 

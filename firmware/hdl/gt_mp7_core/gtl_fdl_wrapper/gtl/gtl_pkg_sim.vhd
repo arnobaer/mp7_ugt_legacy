@@ -104,7 +104,6 @@ type std_logic_2dim_array is array (natural range <>, natural range <>) of std_l
 -- HB 2017-05-18:
 type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
 
-constant MAX_TEMPLATES_BITS : positive := 16;
 -- ==== MUONs - begin ============================================================
 -- MUONs
 constant NR_MUON_TEMPLATES : positive range 1 to 4 := 4; -- number of max. templates for muon conditions
@@ -511,6 +510,8 @@ constant D_S_I_MBT1HFM_V2 : d_s_i_mbt1hfm_record := (MBT1HFM_COUNT_HIGH,MBT1HFM_
 
 -- "External conditions" (former "Technical Triggers" and "External Algorithms") definitions
 constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; -- number of "External conditions" inputs (proposed max. NR_EXTERNAL_CONDITIONS = 256), from lhc_data_pkg.vhd
+
+constant MAX_NR_OBJECTS : natural := 12;
 
 -- ==== Correlations - begin ============================================================
 -- Subtractors
