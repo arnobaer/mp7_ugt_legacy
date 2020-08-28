@@ -104,6 +104,7 @@ type std_logic_2dim_array is array (natural range <>, natural range <>) of std_l
 -- HB 2017-05-18:
 type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
 
+constant MAX_TEMPLATES_BITS : positive := 16;
 -- ==== MUONs - begin ============================================================
 -- MUONs
 constant NR_MUON_TEMPLATES : positive range 1 to 4 := 4; -- number of max. templates for muon conditions
@@ -194,6 +195,7 @@ constant d_s_i_tau : d_s_i_calo_record := (24,17,16,9,8,0);
 constant EG_TYPE : natural range 0 to 2 := 0;
 constant JET_TYPE : natural range 0 to 2 := 1;
 constant TAU_TYPE : natural range 0 to 2 := 2;
+constant MU_TYPE : natural := 3;
 
 type d_s_i_eg_record is record
     iso_high, iso_low, phi_high, phi_low, eta_high, eta_low, et_high, et_low : natural range MAX_CALO_BITS-1 downto 0;
