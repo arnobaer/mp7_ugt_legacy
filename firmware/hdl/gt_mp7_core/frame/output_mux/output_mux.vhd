@@ -1,6 +1,10 @@
+-- Description:
+-- Multiplexer for read-out record data.
 
--- HB 2016-09-16: changed port names for algos for new read-out record structure (see proposal "https://twiki.cern.ch/twiki/bin/view/CMS/UGT_readout_proposal")
--- JW 2015-11-04: included local veto and finor, included prescale_factor_set_index in readout
+-- HB 2020-09-08: inserted orbit counter to quad 6 for "scouting".
+-- HB 2016-09-16: inserted L1TM_UID_HASH and FW_UID_HASH.
+-- HB 2016-09-16: changed port names for algos for new read-out record structure (see proposal "https://twiki.cern.ch/twiki/bin/view/CMS/UGT_readout_proposal").
+-- JW 2015-11-04: included local veto and finor, included prescale_factor_set_index in readout.
 
 library ieee;
 use IEEE.std_logic_1164.all;
@@ -14,7 +18,6 @@ use work.lhc_data_pkg.all;
 use work.gt_mp7_core_pkg.all;
 use work.mp7_ttc_decl.all;
 
--- HB 2016-09-16: inserted for L1TM_UID_HASH and FW_UID_HASH
 use work.gtl_pkg.ALL;
 
 entity output_mux is
@@ -27,8 +30,9 @@ entity output_mux is
         lhc_rst     : in std_logic;
         clk240      : in std_logic;
         ctrs        : in ttc_stuff_array; --mp7 ttc ctrs
-        bx_nr       : in std_logic_vector(11 downto 0);
-        bx_nr_fdl   : in std_logic_vector(11 downto 0);
+        bx_nr       : in bx_nr_t;
+        bx_nr_fdl   : in bx_nr_t;
+        orbit_nr    : in orbit_nr_t;
         algo_after_gtLogic   : in std_logic_vector(MAX_NR_ALGOS-1 downto 0);
         algo_after_bxomask   : in std_logic_vector(MAX_NR_ALGOS-1 downto 0);
         algo_after_prescaler   : in std_logic_vector(MAX_NR_ALGOS-1 downto 0);
@@ -265,8 +269,8 @@ begin
     s_in1_mux8   <=   (algo_after_prescaler(447 downto 416), sValid, start, strobe);    -- frame 1   -> algo_after_prescaler_mask 416-447
     s_in2_mux8   <=   (algo_after_prescaler(479 downto 448), sValid, start, strobe);    -- frame 2   -> algo_after_prescaler_mask 448-479
     s_in3_mux8   <=   (algo_after_prescaler(511 downto 480), sValid, start, strobe);    -- frame 3   -> algo_after_prescaler_mask 480-511
-    s_in4_mux8   <=   (readout_finor, sValid, start, strobe);     -- frame 4   -> finor
-    s_in5_mux8   <=   (X"000000" & prescale_factor, sValid, start, strobe);            -- frame 5   -> free
+    s_in4_mux8   <=   (readout_finor, sValid, start, strobe);                           -- frame 4   -> finor + veto
+    s_in5_mux8   <=   (X"000000" & prescale_factor, sValid, start, strobe);             -- frame 5   -> prescale_factor
 
   mux8_i: entity work.mux
         port map(
@@ -277,22 +281,23 @@ begin
             in1     =>  s_in1_mux8,    -- frame 1   -> algo_after_prescaler_mask 416-447
             in2     =>  s_in2_mux8,    -- frame 2   -> algo_after_prescaler_mask 448-479
             in3     =>  s_in3_mux8,    -- frame 3   -> algo_after_prescaler_mask 480-511
-            in4     =>  s_in4_mux8,    -- frame 4  -> finor
-            in5     =>  s_in5_mux8,    -- frame 5 -> free
+            in4     =>  s_in4_mux8,    -- frame 4   -> finor + veto
+            in5     =>  s_in5_mux8,    -- frame 5   -> prescale_factor
             -- sel     =>  frame_cntr,
             mux_out =>  lane_out(24)
         );
 
 
+    -- HB 2020-09-08: inserted orbit countert
     -- JW 2015-08-24: added local and mp7 bc_cntr to output
     -- bc cntr output
 
-    s_in0_mux9   <=   (X"00000" & bx_nr, sValid, start, strobe);           -- frame 0   -> frame bx_nr
-    s_in1_mux9   <=   (X"00000" & ctrs(6).bctr, sValid, start, strobe);    -- frame 1   -> mp7 ttc bc cntr for Quad 6!
-    s_in2_mux9   <=   (X"00000" & bx_nr_fdl, sValid, start, strobe);       -- frame 5   -> frame bx_nr_fdl
-    s_in3_mux9   <=   ((others => '0'), sValid, start, strobe);            -- frame 5   -> free
-    s_in4_mux9   <=   ((others => '0'), sValid, start, strobe);            -- frame 5   -> free
-    s_in5_mux9   <=   ((others => '0'), sValid, start, strobe);            -- frame 5   -> free
+    s_in0_mux9   <=   (X"00000" & bx_nr, sValid, start, strobe);                 -- frame 0   -> bx_nr
+    s_in1_mux9   <=   (X"00000" & ctrs(6).bctr, sValid, start, strobe);          -- frame 1   -> mp7 ttc bc cntr for Quad 6!
+    s_in2_mux9   <=   (X"00000" & bx_nr_fdl, sValid, start, strobe);             -- frame 2   -> bx_nr_fdl
+    s_in3_mux9   <=   (X"0000" & orbit_nr(47 downto 32), sValid, start, strobe); -- frame 3   -> orbit counter 47..32
+    s_in4_mux9   <=   (orbit_nr(31 downto 0), sValid, start, strobe);            -- frame 4   -> orbit counter 31..0
+    s_in5_mux9   <=   ((others => '0'), sValid, start, strobe);                  -- frame 5   -> free
 
   mux9_i: entity work.mux
         port map(
@@ -302,9 +307,9 @@ begin
             in0     =>  s_in0_mux9,    -- frame 0   -> bx_nr
             in1     =>  s_in1_mux9,    -- frame 1   -> mp7 ttc bc cntr
             in2     =>  s_in2_mux9,    -- frame 2   -> bx_nr_fdl
-            in3     =>  s_in3_mux9,    -- frame 3   -> free
-            in4     =>  s_in4_mux9,    -- frame 4  -> free
-            in5     =>  s_in5_mux9,    -- frame 5 -> free
+            in3     =>  s_in3_mux9,    -- frame 3   -> orbit counter 47..32
+            in4     =>  s_in4_mux9,    -- frame 4   -> orbit counter 31..0
+            in5     =>  s_in5_mux9,    -- frame 5   -> free
             -- sel     =>  frame_cntr,
             mux_out =>  lane_out(25)
         );

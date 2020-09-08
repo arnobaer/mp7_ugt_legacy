@@ -1,6 +1,7 @@
 -- Description:
 -- Contains the "framework" of GT-logic (all parts, except GTL and FDL).
 
+-- HB 2020-09-08: v1.2.4 - inserted orbit counter to output_mux for "scouting".
 -- HB 2017-10-10: v1.2.3 - bug fix "simmem_in_use_i" input of spytrig.
 -- HB 2017-10-10: v1.2.2 - removed mux control register ("mux_ctrl_regs_1"), used fixed values for output mux inputs ("mux_ctrl").
 -- HB 2017-10-06: v1.2.1 - cleaned-up (unused instances and signals). Changed port name "dsmux_lhc_data_o" to "lhc_data_2_gtl_o". Removed "SIMULATE_DATAPATH" from generic.
@@ -387,6 +388,7 @@ architecture rtl of frame is
             ctrs        => ctrs,
             bx_nr       => bx_nr,
             bx_nr_fdl   => bx_nr_d_FDL_int,
+            orbit_nr    => orbit_nr,
             algo_after_gtLogic   => algo_after_gtLogic_rop,
             algo_after_bxomask   => algo_after_bxomask_rop,
             algo_after_prescaler => algo_after_prescaler_rop,
