@@ -8,8 +8,8 @@ use ieee.std_logic_1164.all;
 use work.gtl_pkg.all;
 
 entity p_m_2_bx_pipeline is
-	port(
-        clk		     : in std_logic;
+    port(
+        clk          : in std_logic;
         muon_data    : in muon_objects_array(0 to nr_muon_objects-1);
         muon_bx_p2  : out muon_objects_array(0 to nr_muon_objects-1);
         muon_bx_p1  : out muon_objects_array(0 to nr_muon_objects-1);
