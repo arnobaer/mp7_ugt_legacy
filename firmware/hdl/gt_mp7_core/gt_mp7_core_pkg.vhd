@@ -4,11 +4,11 @@
 -- mp7_ugt (=FRAME_VERSION): v1.12.1
 --
 -- frame: v1.2.3 (see frame.vhd)
--- gtl: v1.11.0 (see gtl_module_tpl.vhd)
+-- gtl: v1.11.1 (see gtl_module_tpl.vhd)
 -- fdl: v1.3.6 (see fdl_module.vhd)
 
 -- gtl history:
--- HB 2020-09-10: v1.11.1: Added modules for ext_cond_pipe and centrality_pipe processes.
+-- HB 2020-09-10: v1.11.1: Added module pipelines (including modules for ext_cond_pipe and centrality_pipe processes).
 -- HB 2020-09-10: v1.11.0: Added files for new structure of correlation cuts outside of conditions.
 -- HB 2020-08-25: v1.10.0: Implemented new muon structure with "unconstraint pt" and "impact parameter". Added files for "invariant mass with 3 objects" and "invariant mass divided by delta R".
 -- HB 2020-02-03: v1.9.4: Changed output pipeline code in esums_comparators.vhd and min_bias_hf_conditions.vhd.
