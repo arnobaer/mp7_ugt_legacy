@@ -11,17 +11,17 @@ use work.gtl_pkg.all;
 
 entity ext_cond_pipeline is
     port(
-        clk         : in std_logic;
-        ext_cond_bx_p2_i  : in std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_p1_i  : in std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_0_i  : in std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_m1_i  : in std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_m2_i  : in std_logic_vector(nr_external_conditions-1 downto 0)
-        ext_cond_bx_p2   : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_p1   : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_0  : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_m1   : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_m2   : out std_logic_vector(nr_external_conditions-1 downto 0)
+        lhc_clk : in std_logic;
+        ext_cond_bx_p2_i : in std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_p1_i : in std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_0_i : in std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_m1_i : in std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_m2_i : in std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_p2 : out std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_p1 : out std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_0 : out std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_m1 : out std_logic_vector(nr_external_conditions-1 downto 0);
+        ext_cond_bx_m2 : out std_logic_vector(nr_external_conditions-1 downto 0)
     );
 end ext_cond_pipeline;
 
