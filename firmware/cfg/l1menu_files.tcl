@@ -1,7 +1,7 @@
 #!/usr/bin/tclsh
 
 set mod_id $env(module_id)
-# puts $mod_id
+puts $mod_id
 
 set gtl_pkg "../../src/module_${mod_id}/gtl_pkg.vhd"
 # puts $gtl_pkg
