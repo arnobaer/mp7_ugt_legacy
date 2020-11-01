@@ -83,12 +83,12 @@ def patch_all(projectpath):
     brd_decl_path = 'boards/mp7/base_fw/mp7xe_690/firmware/hdl/mp7_brd_decl.vhd'
     area_constraints_path = 'boards/mp7/base_fw/common/firmware/ucf/area_constraints.tcl'
     mp7xe_690_path = 'boards/mp7/base_fw/mp7xe_690/firmware/hdl/mp7xe_690.vhd'
-    script_writer_path = 'scripts/firmware/dep_tree/VivadoScriptWriter.py'
+#    script_writer_path = 'scripts/firmware/dep_tree/VivadoScriptWriter.py'
 
     replace_brd_decl(os.path.join(root_path, brd_decl_path))
     replace_area_constraints(os.path.join(root_path, area_constraints_path))
     insert_l1a_ttc(os.path.join(root_path, mp7xe_690_path))
-    append_vivado_rules(os.path.join(root_path, script_writer_path))
+#    append_vivado_rules(os.path.join(root_path, script_writer_path))
 
 def parse_args():
     """Parse command line arguments."""
